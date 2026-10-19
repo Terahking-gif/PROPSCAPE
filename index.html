@@ -1,0 +1,358 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.7">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;Rental Property Sourcing CRM &amp; Script Builder&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- Tailwind CSS --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- React &amp; React DOM --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- Babel for JSX --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;script src="https://unpkg.com/@babel/standalone/babel.min.js"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- Lucide Icons --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;script src="https://unpkg.com/lucide@latest"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>body { background-color: #f8fafc; color: #0f172a; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="root"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;script type="text/babel"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const { useState, useEffect } = React;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// Initial Sample Data</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const INITIAL_LEADS = [</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{</p>
+<p class="p1"><span class="Apple-converted-space">        </span>id: '1',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>title: '3 Bed Terraced House - High Street',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>location: 'Grays, RM17',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>price: 1650,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>bedrooms: 3,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>propertyType: 'House',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>source: 'Rightmove Scraper',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>contactName: 'David Miller',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>phone: '07700 900123',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>email: 'd.miller@example.com',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>status: 'New Lead',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>dateAdded: '2026-10-15',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>notes: 'Listed 2 days ago. Motivated landlord looking for long term tenant.',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>history: [{ date: '2026-10-15 10:30', text: 'Scraped from Rightmove automatically.' }]</p>
+<p class="p1"><span class="Apple-converted-space">      </span>},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{</p>
+<p class="p1"><span class="Apple-converted-space">        </span>id: '2',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>title: '2 Bed Modern Apartment - Riverside',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>location: 'Grays, RM17',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>price: 1350,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>bedrooms: 2,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>propertyType: 'Flat',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>source: 'OpenRent Scraper',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>contactName: 'Sarah Jenkins',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>phone: '07700 900456',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>email: 's.jenkins@example.com',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>status: 'Contacted',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>dateAdded: '2026-10-14',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>notes: 'Left initial voicemail. Sent Rent-to-Rent corporate proposal email.',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>history: [</p>
+<p class="p1"><span class="Apple-converted-space">          </span>{ date: '2026-10-14 09:15', text: 'Imported into CRM.' },</p>
+<p class="p1"><span class="Apple-converted-space">          </span>{ date: '2026-10-14 14:20', text: 'Sent initial WhatsApp and follow-up email.' }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>]</p>
+<p class="p1"><span class="Apple-converted-space">      </span>},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{</p>
+<p class="p1"><span class="Apple-converted-space">        </span>id: '3',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>title: '4 Bed Semi-Detached Family Home',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>location: 'London, E14',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>price: 2800,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>bedrooms: 4,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>propertyType: 'House',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>source: 'Gumtree Scraper',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>contactName: 'Robert Taylor',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>phone: '07700 900789',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>email: 'rtaylor@example.com',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>status: 'In Negotiation',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>dateAdded: '2026-10-10',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>notes: 'Had phone call. Open to corporate lease if guaranteed rent terms fit.',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>history: [</p>
+<p class="p1"><span class="Apple-converted-space">          </span>{ date: '2026-10-10 11:00', text: 'Scraped &amp; added.' },</p>
+<p class="p1"><span class="Apple-converted-space">          </span>{ date: '2026-10-12 16:45', text: 'Called landlord - discussed 3 year lease agreement.' }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>]</p>
+<p class="p1"><span class="Apple-converted-space">      </span>},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{</p>
+<p class="p1"><span class="Apple-converted-space">        </span>id: '4',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>title: '1 Bed Luxury Suite',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>location: 'Manchester, M1',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>price: 950,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>bedrooms: 1,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>propertyType: 'Flat',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>source: 'Manual Entry',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>contactName: 'Amanda White',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>phone: '07700 900111',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>email: 'awhite@example.com',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>status: 'Agreement Signed',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>dateAdded: '2026-10-05',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>notes: 'Agreement signed for 24 months corporate management.',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>history: [</p>
+<p class="p1"><span class="Apple-converted-space">          </span>{ date: '2026-10-05 10:00', text: 'Created lead manually.' },</p>
+<p class="p1"><span class="Apple-converted-space">          </span>{ date: '2026-10-18 15:00', text: 'Contract signed by landlord.' }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>]</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>const SCRIPTS = [</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{</p>
+<p class="p1"><span class="Apple-converted-space">        </span>id: 'direct-pitch',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>title: '1. Direct Phone Call Pitch',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>category: 'Phone',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>text: `Hi {Landlord_Name},\n\nMy name is [Your Name] from [Your Company]. I'm calling regarding your property listing for the {Bedrooms} bed property at {Property_Address}.\n\nI noticed it's currently listed for £{Rent_Amount}/month. We specialize in long-term corporate lets for vetted professional tenants in {Location}.\n\nWe offer landlords guaranteed rent, 0% management fees, and full property maintenance for a 3-5 year term. Do you have 2 minutes to discuss if this model fits your goals for this property?`</p>
+<p class="p1"><span class="Apple-converted-space">      </span>},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{</p>
+<p class="p1"><span class="Apple-converted-space">        </span>id: 'voicemail',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>title: '2. Voicemail Script',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>category: 'Phone',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>text: `Hi {Landlord_Name}, this is [Your Name] calling about your {Bedrooms} bed property on {Property_Address}.\n\nWe represent corporate clients seeking quality long-term rentals in {Location} and can offer guaranteed monthly rent with full upkeep.\n\nPlease give me a call back on [Your Phone] or reply to my email at [Your Email]. Thanks!`</p>
+<p class="p1"><span class="Apple-converted-space">      </span>},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{</p>
+<p class="p1"><span class="Apple-converted-space">        </span>id: 'email-outreach',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>title: '3. First Outreach Email / WhatsApp',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>category: 'Email',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>text: `Subject: Corporate Lease Enquiry - {Property_Address}\n\nDear {Landlord_Name},\n\nI hope you are well.\n\nI am contacting you regarding your property at {Property_Address}, listed at £{Rent_Amount}/pm.\n\nWe are currently expanding our portfolio of professional corporate housing in {Location} and are looking to secure a property on a 3 to 5 year guaranteed lease agreement.\n\nKey Benefits to You:\n- Guaranteed rent on time every month (no void periods)\n- Zero agent fees or commission\n- Regular professional cleaning and maintenance included\n\nWould you be open to a quick 5-minute call this week to see if this aligns with your plans?\n\nBest regards,\n[Your Name]`</p>
+<p class="p1"><span class="Apple-converted-space">      </span>},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{</p>
+<p class="p1"><span class="Apple-converted-space">        </span>id: 'post-viewing',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>title: '4. Post-Viewing Follow-Up',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>category: 'Email',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>text: `Subject: Follow-up on {Property_Address}\n\nHi {Landlord_Name},\n\nThank you for taking the time to discuss {Property_Address}.\n\nAs discussed, we would love to proceed with a guaranteed rent offer of £{Rent_Amount} per month on a 3-year agreement starting next month.\n\nI have attached our standard sample agreement and company references for your review. Please let me know when you'd like to finalize the start date.\n\nBest regards,\n[Your Name]`</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function App() {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const [leads, setLeads] = useState(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const saved = localStorage.getItem('property_crm_leads');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>return saved ? JSON.parse(saved) : INITIAL_LEADS;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>const [activeTab, setActiveTab] = useState('crm'); // crm | scraper | scripts | analytics</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const [viewMode, setViewMode] = useState('table'); // table | kanban</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const [searchTerm, setSearchTerm] = useState('');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const [statusFilter, setStatusFilter] = useState('All');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const [selectedLead, setSelectedLead] = useState(null);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const [selectedScript, setSelectedScript] = useState(SCRIPTS[0]);</p>
+<p class="p2"><span class="Apple-converted-space">      </span></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Scraper state</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const [scraperLocation, setScraperLocation] = useState('Grays');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const [scraperType, setScraperType] = useState('All');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const [scraperCount, setScraperCount] = useState(5);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const [isScraping, setIsScraping] = useState(false);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const [scraperLogs, setScraperLogs] = useState([]);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Import Modal</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const [showImportModal, setShowImportModal] = useState(false);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const [csvRawText, setCsvRawText] = useState('');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// New Note State</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const [newNoteText, setNewNoteText] = useState('');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>useEffect(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>localStorage.setItem('property_crm_leads', JSON.stringify(leads));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}, [leads]);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>useEffect(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (window.lucide) {</p>
+<p class="p1"><span class="Apple-converted-space">          </span>window.lucide.createIcons();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Filtered Leads</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const filteredLeads = leads.filter(lead =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const matchesSearch =<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">          </span>lead.title.toLowerCase().includes(searchTerm.toLowerCase()) ||</p>
+<p class="p1"><span class="Apple-converted-space">          </span>lead.location.toLowerCase().includes(searchTerm.toLowerCase()) ||</p>
+<p class="p1"><span class="Apple-converted-space">          </span>lead.contactName.toLowerCase().includes(searchTerm.toLowerCase());</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const matchesStatus = statusFilter === 'All' || lead.status === statusFilter;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>return matchesSearch &amp;&amp; matchesStatus;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Stats</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const totalLeads = leads.length;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const contacted = leads.filter(l =&gt; l.status === 'Contacted').length;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const inNegotiation = leads.filter(l =&gt; l.status === 'In Negotiation').length;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const closed = leads.filter(l =&gt; l.status === 'Agreement Signed').length;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const pipelineRent = leads.reduce((acc, curr) =&gt; acc + (Number(curr.price) || 0), 0);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Handle Status Change</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const updateLeadStatus = (id, newStatus) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>setLeads(prev =&gt; prev.map(l =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">          </span>if (l.id === id) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const updatedHistory = [</p>
+<p class="p1"><span class="Apple-converted-space">              </span>...(l.history || []),</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ date: new Date().toLocaleString(), text: `Status updated to ${newStatus}` }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>return { ...l, status: newStatus, history: updatedHistory };</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>return l;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}));</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (selectedLead &amp;&amp; selectedLead.id === id) {</p>
+<p class="p1"><span class="Apple-converted-space">          </span>setSelectedLead(prev =&gt; ({ ...prev, status: newStatus }));</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">      </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Add Note to Selected Lead</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const handleAddNote = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (!newNoteText.trim() || !selectedLead) return;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const noteEntry = { date: new Date().toLocaleString(), text: newNoteText };</p>
+<p class="p1"><span class="Apple-converted-space">        </span>setLeads(prev =&gt; prev.map(l =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">          </span>if (l.id === selectedLead.id) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>return {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>...l,</p>
+<p class="p1"><span class="Apple-converted-space">              </span>notes: l.notes ? `${l.notes}\n[${noteEntry.date}] ${newNoteText}` : newNoteText,</p>
+<p class="p1"><span class="Apple-converted-space">              </span>history: [...(l.history || []), noteEntry]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>};</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>return l;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}));</p>
+<p class="p1"><span class="Apple-converted-space">        </span>setSelectedLead(prev =&gt; ({</p>
+<p class="p1"><span class="Apple-converted-space">          </span>...prev,</p>
+<p class="p1"><span class="Apple-converted-space">          </span>notes: prev.notes ? `${prev.notes}\n[${noteEntry.date}] ${newNoteText}` : newNoteText,</p>
+<p class="p1"><span class="Apple-converted-space">          </span>history: [...(prev.history || []), noteEntry]</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}));</p>
+<p class="p1"><span class="Apple-converted-space">        </span>setNewNoteText('');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Scraper Simulation</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const runScraper = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>setIsScraping(true);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>setScraperLogs(['[INIT] Connecting to property aggregators...']);</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>setTimeout(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">          </span>setScraperLogs(prev =&gt; [...prev, `[SCRAPE] Searching ads in ${scraperLocation} (${scraperType})...`]);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}, 1000);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>setTimeout(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const newScraped = [];</p>
+<p class="p1"><span class="Apple-converted-space">          </span>for (let i = 1; i &lt;= Number(scraperCount); i++) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const id = Date.now() + i + '';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>newScraped.push({</p>
+<p class="p1"><span class="Apple-converted-space">              </span>id,</p>
+<p class="p1"><span class="Apple-converted-space">              </span>title: `${Math.floor(Math.random() * 3 + 1)} Bed Flat in ${scraperLocation}`,</p>
+<p class="p1"><span class="Apple-converted-space">              </span>location: `${scraperLocation}, UK`,</p>
+<p class="p1"><span class="Apple-converted-space">              </span>price: Math.floor(Math.random() * 800) + 1100,</p>
+<p class="p1"><span class="Apple-converted-space">              </span>bedrooms: Math.floor(Math.random() * 3) + 1,</p>
+<p class="p1"><span class="Apple-converted-space">              </span>propertyType: scraperType === 'All' ? 'Flat' : scraperType,</p>
+<p class="p1"><span class="Apple-converted-space">              </span>source: 'Auto Scraper',</p>
+<p class="p1"><span class="Apple-converted-space">              </span>contactName: `Landlord ${i}`,</p>
+<p class="p1"><span class="Apple-converted-space">              </span>phone: `07700 90${Math.floor(Math.random() * 899 + 100)}`,</p>
+<p class="p1"><span class="Apple-converted-space">              </span>email: `landlord${i}@example.com`,</p>
+<p class="p1"><span class="Apple-converted-space">              </span>status: 'New Lead',</p>
+<p class="p1"><span class="Apple-converted-space">              </span>dateAdded: new Date().toISOString().split('T')[0],</p>
+<p class="p1"><span class="Apple-converted-space">              </span>notes: `Auto scraped listing from ${scraperLocation}.`,</p>
+<p class="p1"><span class="Apple-converted-space">              </span>history: [{ date: new Date().toLocaleString(), text: 'Scraped from property ad.' }]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>setLeads(prev =&gt; [...newScraped, ...prev]);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>setScraperLogs(prev =&gt; [...prev, `[SUCCESS] Imported ${newScraped.length} leads into CRM.`]);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>setIsScraping(false);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}, 2500);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// CSV Export</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const exportCSV = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const headers = ['ID', 'Title', 'Location', 'Price', 'Bedrooms', 'PropertyType', 'ContactName', 'Phone', 'Email', 'Status', 'Notes'];</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const rows = filteredLeads.map(l =&gt; [</p>
+<p class="p1"><span class="Apple-converted-space">          </span>l.id, `"${l.title}"`, `"${l.location}"`, l.price, l.bedrooms, l.propertyType, `"${l.contactName}"`, `"${l.phone}"`, `"${l.email}"`, `"${l.status}"`, `"${(l.notes || '').replace(/"/g, '""')}"`</p>
+<p class="p1"><span class="Apple-converted-space">        </span>]);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e =&gt; e.join(','))].join('\n');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const encodedUri = encodeURI(csvContent);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const link = document.createElement('a');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>link.setAttribute('href', encodedUri);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>link.setAttribute('download', `rental_leads_${new Date().toISOString().split('T')[0]}.csv`);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.body.appendChild(link);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>link.click();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.body.removeChild(link);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// CSV Import Parser</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const handleCsvImport = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (!csvRawText.trim()) return;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const lines = csvRawText.trim().split('\n');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (lines.length &lt; 2) return;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const imported = [];</p>
+<p class="p1"><span class="Apple-converted-space">        </span>for (let i = 1; i &lt; lines.length; i++) {</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const cols = lines[i].split(',').map(c =&gt; c.trim().replace(/^"|"$/g, ''));</p>
+<p class="p1"><span class="Apple-converted-space">          </span>if (cols.length &gt;= 4) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>imported.push({</p>
+<p class="p1"><span class="Apple-converted-space">              </span>id: Date.now() + i + '',</p>
+<p class="p1"><span class="Apple-converted-space">              </span>title: cols[0] || 'Imported Property',</p>
+<p class="p1"><span class="Apple-converted-space">              </span>location: cols[1] || 'Unknown',</p>
+<p class="p1"><span class="Apple-converted-space">              </span>price: Number(cols[2]) || 1200,</p>
+<p class="p1"><span class="Apple-converted-space">              </span>bedrooms: Number(cols[3]) || 2,</p>
+<p class="p1"><span class="Apple-converted-space">              </span>propertyType: cols[4] || 'House',</p>
+<p class="p1"><span class="Apple-converted-space">              </span>source: 'CSV Import',</p>
+<p class="p1"><span class="Apple-converted-space">              </span>contactName: cols[5] || 'Landlord',</p>
+<p class="p1"><span class="Apple-converted-space">              </span>phone: cols[6] || '',</p>
+<p class="p1"><span class="Apple-converted-space">              </span>email: cols[7] || '',</p>
+<p class="p1"><span class="Apple-converted-space">              </span>status: cols[8] || 'New Lead',</p>
+<p class="p1"><span class="Apple-converted-space">              </span>notes: cols[9] || '',</p>
+<p class="p1"><span class="Apple-converted-space">              </span>dateAdded: new Date().toISOString().split('T')[0],</p>
+<p class="p1"><span class="Apple-converted-space">              </span>history: [{ date: new Date().toLocaleString(), text: 'Imported via CSV' }]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>setLeads(prev =&gt; [...imported, ...prev]);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>setShowImportModal(false);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>setCsvRawText('');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>alert(`Successfully imported ${imported.length} leads!`);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Populate Script Text</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const renderScriptText = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (!selectedScript) return '';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const l = selectedLead || {</p>
+<p class="p1"><span class="Apple-converted-space">          </span>contactName: '[Landlord Name]',</p>
+<p class="p1"><span class="Apple-converted-space">          </span>title: '[Property Address]',</p>
+<p class="p1"><span class="Apple-converted-space">          </span>price: '[Rent Amount]',</p>
+<p class="p1"><span class="Apple-converted-space">          </span>bedrooms: '[Bedrooms]',</p>
+<p class="p1"><span class="Apple-converted-space">          </span>location: '[Location]'</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>return selectedScript.text</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.replace(/{Landlord_Name}/g, l.contactName || '[Landlord Name]')</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.replace(/{Property_Address}/g, l.title || '[Property Address]')</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.replace(/{Rent_Amount}/g, l.price || '[Rent Amount]')</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.replace(/{Bedrooms}/g, l.bedrooms || '[Bedrooms]')</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.replace(/{Location}/g, l.location || '[Location]');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>return (</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div className="min-h-screen flex flex-col bg-slate-50 text-slate-900"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>{/* Header */}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;header className="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-30"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div className="max-w-7xl mx-mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;div className="flex items-center space-x-3"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div className="bg-indigo-600 p-2 rounded-lg font-bold text-xl tracking-wider"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>RCRM</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;h1 className="font-bold text-lg leading-none"&gt;Rental Property CRM&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;p className="text-xs text</p>
+</body>
+</html>
