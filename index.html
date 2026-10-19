@@ -1,358 +1,899 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.7">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rental Property Sourcing CRM & Script Builder</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- React & React DOM -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <!-- Babel for JSX -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { background-color: #f8fafc; color: #0f172a; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
   </style>
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="en"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;Rental Property Sourcing CRM &amp; Script Builder&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- Tailwind CSS --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- React &amp; React DOM --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin&gt;&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin&gt;&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- Babel for JSX --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;script src="https://unpkg.com/@babel/standalone/babel.min.js"&gt;&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- Lucide Icons --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;script src="https://unpkg.com/lucide@latest"&gt;&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>body { background-color: #f8fafc; color: #0f172a; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="root"&gt;&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;script type="text/babel"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const { useState, useEffect } = React;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// Initial Sample Data</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const INITIAL_LEADS = [</p>
-<p class="p1"><span class="Apple-converted-space">      </span>{</p>
-<p class="p1"><span class="Apple-converted-space">        </span>id: '1',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>title: '3 Bed Terraced House - High Street',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>location: 'Grays, RM17',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>price: 1650,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>bedrooms: 3,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>propertyType: 'House',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>source: 'Rightmove Scraper',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>contactName: 'David Miller',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>phone: '07700 900123',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>email: 'd.miller@example.com',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>status: 'New Lead',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>dateAdded: '2026-10-15',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>notes: 'Listed 2 days ago. Motivated landlord looking for long term tenant.',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>history: [{ date: '2026-10-15 10:30', text: 'Scraped from Rightmove automatically.' }]</p>
-<p class="p1"><span class="Apple-converted-space">      </span>},</p>
-<p class="p1"><span class="Apple-converted-space">      </span>{</p>
-<p class="p1"><span class="Apple-converted-space">        </span>id: '2',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>title: '2 Bed Modern Apartment - Riverside',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>location: 'Grays, RM17',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>price: 1350,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>bedrooms: 2,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>propertyType: 'Flat',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>source: 'OpenRent Scraper',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>contactName: 'Sarah Jenkins',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>phone: '07700 900456',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>email: 's.jenkins@example.com',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>status: 'Contacted',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>dateAdded: '2026-10-14',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>notes: 'Left initial voicemail. Sent Rent-to-Rent corporate proposal email.',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>history: [</p>
-<p class="p1"><span class="Apple-converted-space">          </span>{ date: '2026-10-14 09:15', text: 'Imported into CRM.' },</p>
-<p class="p1"><span class="Apple-converted-space">          </span>{ date: '2026-10-14 14:20', text: 'Sent initial WhatsApp and follow-up email.' }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>]</p>
-<p class="p1"><span class="Apple-converted-space">      </span>},</p>
-<p class="p1"><span class="Apple-converted-space">      </span>{</p>
-<p class="p1"><span class="Apple-converted-space">        </span>id: '3',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>title: '4 Bed Semi-Detached Family Home',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>location: 'London, E14',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>price: 2800,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>bedrooms: 4,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>propertyType: 'House',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>source: 'Gumtree Scraper',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>contactName: 'Robert Taylor',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>phone: '07700 900789',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>email: 'rtaylor@example.com',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>status: 'In Negotiation',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>dateAdded: '2026-10-10',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>notes: 'Had phone call. Open to corporate lease if guaranteed rent terms fit.',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>history: [</p>
-<p class="p1"><span class="Apple-converted-space">          </span>{ date: '2026-10-10 11:00', text: 'Scraped &amp; added.' },</p>
-<p class="p1"><span class="Apple-converted-space">          </span>{ date: '2026-10-12 16:45', text: 'Called landlord - discussed 3 year lease agreement.' }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>]</p>
-<p class="p1"><span class="Apple-converted-space">      </span>},</p>
-<p class="p1"><span class="Apple-converted-space">      </span>{</p>
-<p class="p1"><span class="Apple-converted-space">        </span>id: '4',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>title: '1 Bed Luxury Suite',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>location: 'Manchester, M1',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>price: 950,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>bedrooms: 1,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>propertyType: 'Flat',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>source: 'Manual Entry',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>contactName: 'Amanda White',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>phone: '07700 900111',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>email: 'awhite@example.com',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>status: 'Agreement Signed',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>dateAdded: '2026-10-05',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>notes: 'Agreement signed for 24 months corporate management.',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>history: [</p>
-<p class="p1"><span class="Apple-converted-space">          </span>{ date: '2026-10-05 10:00', text: 'Created lead manually.' },</p>
-<p class="p1"><span class="Apple-converted-space">          </span>{ date: '2026-10-18 15:00', text: 'Contract signed by landlord.' }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>]</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>const SCRIPTS = [</p>
-<p class="p1"><span class="Apple-converted-space">      </span>{</p>
-<p class="p1"><span class="Apple-converted-space">        </span>id: 'direct-pitch',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>title: '1. Direct Phone Call Pitch',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>category: 'Phone',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>text: `Hi {Landlord_Name},\n\nMy name is [Your Name] from [Your Company]. I'm calling regarding your property listing for the {Bedrooms} bed property at {Property_Address}.\n\nI noticed it's currently listed for £{Rent_Amount}/month. We specialize in long-term corporate lets for vetted professional tenants in {Location}.\n\nWe offer landlords guaranteed rent, 0% management fees, and full property maintenance for a 3-5 year term. Do you have 2 minutes to discuss if this model fits your goals for this property?`</p>
-<p class="p1"><span class="Apple-converted-space">      </span>},</p>
-<p class="p1"><span class="Apple-converted-space">      </span>{</p>
-<p class="p1"><span class="Apple-converted-space">        </span>id: 'voicemail',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>title: '2. Voicemail Script',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>category: 'Phone',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>text: `Hi {Landlord_Name}, this is [Your Name] calling about your {Bedrooms} bed property on {Property_Address}.\n\nWe represent corporate clients seeking quality long-term rentals in {Location} and can offer guaranteed monthly rent with full upkeep.\n\nPlease give me a call back on [Your Phone] or reply to my email at [Your Email]. Thanks!`</p>
-<p class="p1"><span class="Apple-converted-space">      </span>},</p>
-<p class="p1"><span class="Apple-converted-space">      </span>{</p>
-<p class="p1"><span class="Apple-converted-space">        </span>id: 'email-outreach',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>title: '3. First Outreach Email / WhatsApp',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>category: 'Email',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>text: `Subject: Corporate Lease Enquiry - {Property_Address}\n\nDear {Landlord_Name},\n\nI hope you are well.\n\nI am contacting you regarding your property at {Property_Address}, listed at £{Rent_Amount}/pm.\n\nWe are currently expanding our portfolio of professional corporate housing in {Location} and are looking to secure a property on a 3 to 5 year guaranteed lease agreement.\n\nKey Benefits to You:\n- Guaranteed rent on time every month (no void periods)\n- Zero agent fees or commission\n- Regular professional cleaning and maintenance included\n\nWould you be open to a quick 5-minute call this week to see if this aligns with your plans?\n\nBest regards,\n[Your Name]`</p>
-<p class="p1"><span class="Apple-converted-space">      </span>},</p>
-<p class="p1"><span class="Apple-converted-space">      </span>{</p>
-<p class="p1"><span class="Apple-converted-space">        </span>id: 'post-viewing',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>title: '4. Post-Viewing Follow-Up',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>category: 'Email',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>text: `Subject: Follow-up on {Property_Address}\n\nHi {Landlord_Name},\n\nThank you for taking the time to discuss {Property_Address}.\n\nAs discussed, we would love to proceed with a guaranteed rent offer of £{Rent_Amount} per month on a 3-year agreement starting next month.\n\nI have attached our standard sample agreement and company references for your review. Please let me know when you'd like to finalize the start date.\n\nBest regards,\n[Your Name]`</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function App() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const [leads, setLeads] = useState(() =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const saved = localStorage.getItem('property_crm_leads');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return saved ? JSON.parse(saved) : INITIAL_LEADS;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>const [activeTab, setActiveTab] = useState('crm'); // crm | scraper | scripts | analytics</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const [viewMode, setViewMode] = useState('table'); // table | kanban</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const [searchTerm, setSearchTerm] = useState('');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const [statusFilter, setStatusFilter] = useState('All');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const [selectedLead, setSelectedLead] = useState(null);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const [selectedScript, setSelectedScript] = useState(SCRIPTS[0]);</p>
-<p class="p2"><span class="Apple-converted-space">      </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>// Scraper state</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const [scraperLocation, setScraperLocation] = useState('Grays');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const [scraperType, setScraperType] = useState('All');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const [scraperCount, setScraperCount] = useState(5);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const [isScraping, setIsScraping] = useState(false);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const [scraperLogs, setScraperLogs] = useState([]);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>// Import Modal</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const [showImportModal, setShowImportModal] = useState(false);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const [csvRawText, setCsvRawText] = useState('');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>// New Note State</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const [newNoteText, setNewNoteText] = useState('');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>useEffect(() =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>localStorage.setItem('property_crm_leads', JSON.stringify(leads));</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}, [leads]);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>useEffect(() =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (window.lucide) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>window.lucide.createIcons();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>// Filtered Leads</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const filteredLeads = leads.filter(lead =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const matchesSearch =<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>lead.title.toLowerCase().includes(searchTerm.toLowerCase()) ||</p>
-<p class="p1"><span class="Apple-converted-space">          </span>lead.location.toLowerCase().includes(searchTerm.toLowerCase()) ||</p>
-<p class="p1"><span class="Apple-converted-space">          </span>lead.contactName.toLowerCase().includes(searchTerm.toLowerCase());</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const matchesStatus = statusFilter === 'All' || lead.status === statusFilter;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return matchesSearch &amp;&amp; matchesStatus;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>// Stats</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const totalLeads = leads.length;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const contacted = leads.filter(l =&gt; l.status === 'Contacted').length;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const inNegotiation = leads.filter(l =&gt; l.status === 'In Negotiation').length;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const closed = leads.filter(l =&gt; l.status === 'Agreement Signed').length;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const pipelineRent = leads.reduce((acc, curr) =&gt; acc + (Number(curr.price) || 0), 0);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>// Handle Status Change</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const updateLeadStatus = (id, newStatus) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>setLeads(prev =&gt; prev.map(l =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>if (l.id === id) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const updatedHistory = [</p>
-<p class="p1"><span class="Apple-converted-space">              </span>...(l.history || []),</p>
-<p class="p1"><span class="Apple-converted-space">              </span>{ date: new Date().toLocaleString(), text: `Status updated to ${newStatus}` }</p>
-<p class="p1"><span class="Apple-converted-space">            </span>];</p>
-<p class="p1"><span class="Apple-converted-space">            </span>return { ...l, status: newStatus, history: updatedHistory };</p>
-<p class="p1"><span class="Apple-converted-space">          </span>}</p>
-<p class="p1"><span class="Apple-converted-space">          </span>return l;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}));</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (selectedLead &amp;&amp; selectedLead.id === id) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>setSelectedLead(prev =&gt; ({ ...prev, status: newStatus }));</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>// Add Note to Selected Lead</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const handleAddNote = () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (!newNoteText.trim() || !selectedLead) return;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const noteEntry = { date: new Date().toLocaleString(), text: newNoteText };</p>
-<p class="p1"><span class="Apple-converted-space">        </span>setLeads(prev =&gt; prev.map(l =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>if (l.id === selectedLead.id) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>return {</p>
-<p class="p1"><span class="Apple-converted-space">              </span>...l,</p>
-<p class="p1"><span class="Apple-converted-space">              </span>notes: l.notes ? `${l.notes}\n[${noteEntry.date}] ${newNoteText}` : newNoteText,</p>
-<p class="p1"><span class="Apple-converted-space">              </span>history: [...(l.history || []), noteEntry]</p>
-<p class="p1"><span class="Apple-converted-space">            </span>};</p>
-<p class="p1"><span class="Apple-converted-space">          </span>}</p>
-<p class="p1"><span class="Apple-converted-space">          </span>return l;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}));</p>
-<p class="p1"><span class="Apple-converted-space">        </span>setSelectedLead(prev =&gt; ({</p>
-<p class="p1"><span class="Apple-converted-space">          </span>...prev,</p>
-<p class="p1"><span class="Apple-converted-space">          </span>notes: prev.notes ? `${prev.notes}\n[${noteEntry.date}] ${newNoteText}` : newNoteText,</p>
-<p class="p1"><span class="Apple-converted-space">          </span>history: [...(prev.history || []), noteEntry]</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}));</p>
-<p class="p1"><span class="Apple-converted-space">        </span>setNewNoteText('');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>// Scraper Simulation</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const runScraper = () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>setIsScraping(true);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>setScraperLogs(['[INIT] Connecting to property aggregators...']);</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>setTimeout(() =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>setScraperLogs(prev =&gt; [...prev, `[SCRAPE] Searching ads in ${scraperLocation} (${scraperType})...`]);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}, 1000);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>setTimeout(() =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const newScraped = [];</p>
-<p class="p1"><span class="Apple-converted-space">          </span>for (let i = 1; i &lt;= Number(scraperCount); i++) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const id = Date.now() + i + '';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>newScraped.push({</p>
-<p class="p1"><span class="Apple-converted-space">              </span>id,</p>
-<p class="p1"><span class="Apple-converted-space">              </span>title: `${Math.floor(Math.random() * 3 + 1)} Bed Flat in ${scraperLocation}`,</p>
-<p class="p1"><span class="Apple-converted-space">              </span>location: `${scraperLocation}, UK`,</p>
-<p class="p1"><span class="Apple-converted-space">              </span>price: Math.floor(Math.random() * 800) + 1100,</p>
-<p class="p1"><span class="Apple-converted-space">              </span>bedrooms: Math.floor(Math.random() * 3) + 1,</p>
-<p class="p1"><span class="Apple-converted-space">              </span>propertyType: scraperType === 'All' ? 'Flat' : scraperType,</p>
-<p class="p1"><span class="Apple-converted-space">              </span>source: 'Auto Scraper',</p>
-<p class="p1"><span class="Apple-converted-space">              </span>contactName: `Landlord ${i}`,</p>
-<p class="p1"><span class="Apple-converted-space">              </span>phone: `07700 90${Math.floor(Math.random() * 899 + 100)}`,</p>
-<p class="p1"><span class="Apple-converted-space">              </span>email: `landlord${i}@example.com`,</p>
-<p class="p1"><span class="Apple-converted-space">              </span>status: 'New Lead',</p>
-<p class="p1"><span class="Apple-converted-space">              </span>dateAdded: new Date().toISOString().split('T')[0],</p>
-<p class="p1"><span class="Apple-converted-space">              </span>notes: `Auto scraped listing from ${scraperLocation}.`,</p>
-<p class="p1"><span class="Apple-converted-space">              </span>history: [{ date: new Date().toLocaleString(), text: 'Scraped from property ad.' }]</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p1"><span class="Apple-converted-space">          </span>}</p>
-<p class="p1"><span class="Apple-converted-space">          </span>setLeads(prev =&gt; [...newScraped, ...prev]);</p>
-<p class="p1"><span class="Apple-converted-space">          </span>setScraperLogs(prev =&gt; [...prev, `[SUCCESS] Imported ${newScraped.length} leads into CRM.`]);</p>
-<p class="p1"><span class="Apple-converted-space">          </span>setIsScraping(false);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}, 2500);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>// CSV Export</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const exportCSV = () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const headers = ['ID', 'Title', 'Location', 'Price', 'Bedrooms', 'PropertyType', 'ContactName', 'Phone', 'Email', 'Status', 'Notes'];</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const rows = filteredLeads.map(l =&gt; [</p>
-<p class="p1"><span class="Apple-converted-space">          </span>l.id, `"${l.title}"`, `"${l.location}"`, l.price, l.bedrooms, l.propertyType, `"${l.contactName}"`, `"${l.phone}"`, `"${l.email}"`, `"${l.status}"`, `"${(l.notes || '').replace(/"/g, '""')}"`</p>
-<p class="p1"><span class="Apple-converted-space">        </span>]);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e =&gt; e.join(','))].join('\n');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const encodedUri = encodeURI(csvContent);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const link = document.createElement('a');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>link.setAttribute('href', encodedUri);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>link.setAttribute('download', `rental_leads_${new Date().toISOString().split('T')[0]}.csv`);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.body.appendChild(link);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>link.click();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.body.removeChild(link);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>// CSV Import Parser</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const handleCsvImport = () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (!csvRawText.trim()) return;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const lines = csvRawText.trim().split('\n');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (lines.length &lt; 2) return;</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const imported = [];</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let i = 1; i &lt; lines.length; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const cols = lines[i].split(',').map(c =&gt; c.trim().replace(/^"|"$/g, ''));</p>
-<p class="p1"><span class="Apple-converted-space">          </span>if (cols.length &gt;= 4) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>imported.push({</p>
-<p class="p1"><span class="Apple-converted-space">              </span>id: Date.now() + i + '',</p>
-<p class="p1"><span class="Apple-converted-space">              </span>title: cols[0] || 'Imported Property',</p>
-<p class="p1"><span class="Apple-converted-space">              </span>location: cols[1] || 'Unknown',</p>
-<p class="p1"><span class="Apple-converted-space">              </span>price: Number(cols[2]) || 1200,</p>
-<p class="p1"><span class="Apple-converted-space">              </span>bedrooms: Number(cols[3]) || 2,</p>
-<p class="p1"><span class="Apple-converted-space">              </span>propertyType: cols[4] || 'House',</p>
-<p class="p1"><span class="Apple-converted-space">              </span>source: 'CSV Import',</p>
-<p class="p1"><span class="Apple-converted-space">              </span>contactName: cols[5] || 'Landlord',</p>
-<p class="p1"><span class="Apple-converted-space">              </span>phone: cols[6] || '',</p>
-<p class="p1"><span class="Apple-converted-space">              </span>email: cols[7] || '',</p>
-<p class="p1"><span class="Apple-converted-space">              </span>status: cols[8] || 'New Lead',</p>
-<p class="p1"><span class="Apple-converted-space">              </span>notes: cols[9] || '',</p>
-<p class="p1"><span class="Apple-converted-space">              </span>dateAdded: new Date().toISOString().split('T')[0],</p>
-<p class="p1"><span class="Apple-converted-space">              </span>history: [{ date: new Date().toLocaleString(), text: 'Imported via CSV' }]</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p1"><span class="Apple-converted-space">          </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>setLeads(prev =&gt; [...imported, ...prev]);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>setShowImportModal(false);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>setCsvRawText('');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>alert(`Successfully imported ${imported.length} leads!`);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>// Populate Script Text</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const renderScriptText = () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (!selectedScript) return '';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const l = selectedLead || {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>contactName: '[Landlord Name]',</p>
-<p class="p1"><span class="Apple-converted-space">          </span>title: '[Property Address]',</p>
-<p class="p1"><span class="Apple-converted-space">          </span>price: '[Rent Amount]',</p>
-<p class="p1"><span class="Apple-converted-space">          </span>bedrooms: '[Bedrooms]',</p>
-<p class="p1"><span class="Apple-converted-space">          </span>location: '[Location]'</p>
-<p class="p1"><span class="Apple-converted-space">        </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>return selectedScript.text</p>
-<p class="p1"><span class="Apple-converted-space">          </span>.replace(/{Landlord_Name}/g, l.contactName || '[Landlord Name]')</p>
-<p class="p1"><span class="Apple-converted-space">          </span>.replace(/{Property_Address}/g, l.title || '[Property Address]')</p>
-<p class="p1"><span class="Apple-converted-space">          </span>.replace(/{Rent_Amount}/g, l.price || '[Rent Amount]')</p>
-<p class="p1"><span class="Apple-converted-space">          </span>.replace(/{Bedrooms}/g, l.bedrooms || '[Bedrooms]')</p>
-<p class="p1"><span class="Apple-converted-space">          </span>.replace(/{Location}/g, l.location || '[Location]');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>return (</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div className="min-h-screen flex flex-col bg-slate-50 text-slate-900"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>{/* Header */}</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;header className="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-30"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div className="max-w-7xl mx-mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;div className="flex items-center space-x-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div className="bg-indigo-600 p-2 rounded-lg font-bold text-xl tracking-wider"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>RCRM</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>&lt;h1 className="font-bold text-lg leading-none"&gt;Rental Property CRM&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>&lt;p className="text-xs text</p>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // Initial Sample Data
+    const INITIAL_LEADS = [
+      {
+        id: '1',
+        title: '3 Bed Terraced House - High Street',
+        location: 'Grays, RM17',
+        price: 1650,
+        bedrooms: 3,
+        propertyType: 'House',
+        source: 'Rightmove Scraper',
+        contactName: 'David Miller',
+        phone: '07700 900123',
+        email: 'd.miller@example.com',
+        status: 'New Lead',
+        dateAdded: '2026-10-15',
+        notes: 'Listed 2 days ago. Motivated landlord looking for long term tenant.',
+        history: [{ date: '2026-10-15 10:30', text: 'Scraped from Rightmove automatically.' }]
+      },
+      {
+        id: '2',
+        title: '2 Bed Modern Apartment - Riverside',
+        location: 'Grays, RM17',
+        price: 1350,
+        bedrooms: 2,
+        propertyType: 'Flat',
+        source: 'OpenRent Scraper',
+        contactName: 'Sarah Jenkins',
+        phone: '07700 900456',
+        email: 's.jenkins@example.com',
+        status: 'Contacted',
+        dateAdded: '2026-10-14',
+        notes: 'Left initial voicemail. Sent Rent-to-Rent corporate proposal email.',
+        history: [
+          { date: '2026-10-14 09:15', text: 'Imported into CRM.' },
+          { date: '2026-10-14 14:20', text: 'Sent initial WhatsApp and follow-up email.' }
+        ]
+      },
+      {
+        id: '3',
+        title: '4 Bed Semi-Detached Family Home',
+        location: 'London, E14',
+        price: 2800,
+        bedrooms: 4,
+        propertyType: 'House',
+        source: 'Gumtree Scraper',
+        contactName: 'Robert Taylor',
+        phone: '07700 900789',
+        email: 'rtaylor@example.com',
+        status: 'In Negotiation',
+        dateAdded: '2026-10-10',
+        notes: 'Had phone call. Open to corporate lease if guaranteed rent terms fit.',
+        history: [
+          { date: '2026-10-10 11:00', text: 'Scraped & added.' },
+          { date: '2026-10-12 16:45', text: 'Called landlord - discussed 3 year lease agreement.' }
+        ]
+      },
+      {
+        id: '4',
+        title: '1 Bed Luxury Suite',
+        location: 'Manchester, M1',
+        price: 950,
+        bedrooms: 1,
+        propertyType: 'Flat',
+        source: 'Manual Entry',
+        contactName: 'Amanda White',
+        phone: '07700 900111',
+        email: 'awhite@example.com',
+        status: 'Agreement Signed',
+        dateAdded: '2026-10-05',
+        notes: 'Agreement signed for 24 months corporate management.',
+        history: [
+          { date: '2026-10-05 10:00', text: 'Created lead manually.' },
+          { date: '2026-10-18 15:00', text: 'Contract signed by landlord.' }
+        ]
+      }
+    ];
+
+    const SCRIPTS = [
+      {
+        id: 'direct-pitch',
+        title: '1. Direct Phone Call Pitch',
+        category: 'Phone',
+        text: `Hi {Landlord_Name},\n\nMy name is [Your Name] from [Your Company]. I'm calling regarding your property listing for the {Bedrooms} bed property at {Property_Address}.\n\nI noticed it's currently listed for £{Rent_Amount}/month. We specialize in long-term corporate lets for vetted professional tenants in {Location}.\n\nWe offer landlords guaranteed rent, 0% management fees, and full property maintenance for a 3-5 year term. Do you have 2 minutes to discuss if this model fits your goals for this property?`
+      },
+      {
+        id: 'voicemail',
+        title: '2. Voicemail Script',
+        category: 'Phone',
+        text: `Hi {Landlord_Name}, this is [Your Name] calling about your {Bedrooms} bed property on {Property_Address}.\n\nWe represent corporate clients seeking quality long-term rentals in {Location} and can offer guaranteed monthly rent with full upkeep.\n\nPlease give me a call back on [Your Phone] or reply to my email at [Your Email]. Thanks!`
+      },
+      {
+        id: 'email-outreach',
+        title: '3. First Outreach Email / WhatsApp',
+        category: 'Email',
+        text: `Subject: Corporate Lease Enquiry - {Property_Address}\n\nDear {Landlord_Name},\n\nI hope you are well.\n\nI am contacting you regarding your property at {Property_Address}, listed at £{Rent_Amount}/pm.\n\nWe are currently expanding our portfolio of professional corporate housing in {Location} and are looking to secure a property on a 3 to 5 year guaranteed lease agreement.\n\nKey Benefits to You:\n- Guaranteed rent on time every month (no void periods)\n- Zero agent fees or commission\n- Regular professional cleaning and maintenance included\n\nWould you be open to a quick 5-minute call this week to see if this aligns with your plans?\n\nBest regards,\n[Your Name]`
+      },
+      {
+        id: 'post-viewing',
+        title: '4. Post-Viewing Follow-Up',
+        category: 'Email',
+        text: `Subject: Follow-up on {Property_Address}\n\nHi {Landlord_Name},\n\nThank you for taking the time to discuss {Property_Address}.\n\nAs discussed, we would love to proceed with a guaranteed rent offer of £{Rent_Amount} per month on a 3-year agreement starting next month.\n\nI have attached our standard sample agreement and company references for your review. Please let me know when you'd like to finalize the start date.\n\nBest regards,\n[Your Name]`
+      }
+    ];
+
+    function App() {
+      const [leads, setLeads] = useState(() => {
+        const saved = localStorage.getItem('property_crm_leads');
+        return saved ? JSON.parse(saved) : INITIAL_LEADS;
+      });
+
+      const [activeTab, setActiveTab] = useState('crm'); // crm | scraper | scripts | analytics
+      const [viewMode, setViewMode] = useState('table'); // table | kanban
+      const [searchTerm, setSearchTerm] = useState('');
+      const [statusFilter, setStatusFilter] = useState('All');
+      const [selectedLead, setSelectedLead] = useState(null);
+      const [selectedScript, setSelectedScript] = useState(SCRIPTS[0]);
+      
+      // Scraper state
+      const [scraperLocation, setScraperLocation] = useState('Grays');
+      const [scraperType, setScraperType] = useState('All');
+      const [scraperCount, setScraperCount] = useState(5);
+      const [isScraping, setIsScraping] = useState(false);
+      const [scraperLogs, setScraperLogs] = useState([]);
+
+      // Import Modal
+      const [showImportModal, setShowImportModal] = useState(false);
+      const [csvRawText, setCsvRawText] = useState('');
+
+      // New Note State
+      const [newNoteText, setNewNoteText] = useState('');
+
+      useEffect(() => {
+        localStorage.setItem('property_crm_leads', JSON.stringify(leads));
+      }, [leads]);
+
+      useEffect(() => {
+        if (window.lucide) {
+          window.lucide.createIcons();
+        }
+      });
+
+      // Filtered Leads
+      const filteredLeads = leads.filter(lead => {
+        const matchesSearch = 
+          lead.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          lead.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          lead.contactName.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesStatus = statusFilter === 'All' || lead.status === statusFilter;
+        return matchesSearch && matchesStatus;
+      });
+
+      // Stats
+      const totalLeads = leads.length;
+      const contacted = leads.filter(l => l.status === 'Contacted').length;
+      const inNegotiation = leads.filter(l => l.status === 'In Negotiation').length;
+      const closed = leads.filter(l => l.status === 'Agreement Signed').length;
+      const pipelineRent = leads.reduce((acc, curr) => acc + (Number(curr.price) || 0), 0);
+
+      // Handle Status Change
+      const updateLeadStatus = (id, newStatus) => {
+        setLeads(prev => prev.map(l => {
+          if (l.id === id) {
+            const updatedHistory = [
+              ...(l.history || []),
+              { date: new Date().toLocaleString(), text: `Status updated to ${newStatus}` }
+            ];
+            return { ...l, status: newStatus, history: updatedHistory };
+          }
+          return l;
+        }));
+        if (selectedLead && selectedLead.id === id) {
+          setSelectedLead(prev => ({ ...prev, status: newStatus }));
+        }
+      };
+
+      // Add Note to Selected Lead
+      const handleAddNote = () => {
+        if (!newNoteText.trim() || !selectedLead) return;
+        const noteEntry = { date: new Date().toLocaleString(), text: newNoteText };
+        setLeads(prev => prev.map(l => {
+          if (l.id === selectedLead.id) {
+            return {
+              ...l,
+              notes: l.notes ? `${l.notes}\n[${noteEntry.date}] ${newNoteText}` : newNoteText,
+              history: [...(l.history || []), noteEntry]
+            };
+          }
+          return l;
+        }));
+        setSelectedLead(prev => ({
+          ...prev,
+          notes: prev.notes ? `${prev.notes}\n[${noteEntry.date}] ${newNoteText}` : newNoteText,
+          history: [...(prev.history || []), noteEntry]
+        }));
+        setNewNoteText('');
+      };
+
+      // Scraper Simulation
+      const runScraper = () => {
+        setIsScraping(true);
+        setScraperLogs(['[INIT] Connecting to property aggregators...']);
+        
+        setTimeout(() => {
+          setScraperLogs(prev => [...prev, `[SCRAPE] Searching ads in ${scraperLocation} (${scraperType})...`]);
+        }, 1000);
+
+        setTimeout(() => {
+          const newScraped = [];
+          for (let i = 1; i <= Number(scraperCount); i++) {
+            const id = Date.now() + i + '';
+            newScraped.push({
+              id,
+              title: `${Math.floor(Math.random() * 3 + 1)} Bed Flat in ${scraperLocation}`,
+              location: `${scraperLocation}, UK`,
+              price: Math.floor(Math.random() * 800) + 1100,
+              bedrooms: Math.floor(Math.random() * 3) + 1,
+              propertyType: scraperType === 'All' ? 'Flat' : scraperType,
+              source: 'Auto Scraper',
+              contactName: `Landlord ${i}`,
+              phone: `07700 90${Math.floor(Math.random() * 899 + 100)}`,
+              email: `landlord${i}@example.com`,
+              status: 'New Lead',
+              dateAdded: new Date().toISOString().split('T')[0],
+              notes: `Auto scraped listing from ${scraperLocation}.`,
+              history: [{ date: new Date().toLocaleString(), text: 'Scraped from property ad.' }]
+            });
+          }
+          setLeads(prev => [...newScraped, ...prev]);
+          setScraperLogs(prev => [...prev, `[SUCCESS] Imported ${newScraped.length} leads into CRM.`]);
+          setIsScraping(false);
+        }, 2500);
+      };
+
+      // CSV Export
+      const exportCSV = () => {
+        const headers = ['ID', 'Title', 'Location', 'Price', 'Bedrooms', 'PropertyType', 'ContactName', 'Phone', 'Email', 'Status', 'Notes'];
+        const rows = filteredLeads.map(l => [
+          l.id, `"${l.title}"`, `"${l.location}"`, l.price, l.bedrooms, l.propertyType, `"${l.contactName}"`, `"${l.phone}"`, `"${l.email}"`, `"${l.status}"`, `"${(l.notes || '').replace(/"/g, '""')}"`
+        ]);
+        const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', `rental_leads_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
+
+      // CSV Import Parser
+      const handleCsvImport = () => {
+        if (!csvRawText.trim()) return;
+        const lines = csvRawText.trim().split('\n');
+        if (lines.length < 2) return;
+        
+        const imported = [];
+        for (let i = 1; i < lines.length; i++) {
+          const cols = lines[i].split(',').map(c => c.trim().replace(/^"|"$/g, ''));
+          if (cols.length >= 4) {
+            imported.push({
+              id: Date.now() + i + '',
+              title: cols[0] || 'Imported Property',
+              location: cols[1] || 'Unknown',
+              price: Number(cols[2]) || 1200,
+              bedrooms: Number(cols[3]) || 2,
+              propertyType: cols[4] || 'House',
+              source: 'CSV Import',
+              contactName: cols[5] || 'Landlord',
+              phone: cols[6] || '',
+              email: cols[7] || '',
+              status: cols[8] || 'New Lead',
+              notes: cols[9] || '',
+              dateAdded: new Date().toISOString().split('T')[0],
+              history: [{ date: new Date().toLocaleString(), text: 'Imported via CSV' }]
+            });
+          }
+        }
+        setLeads(prev => [...imported, ...prev]);
+        setShowImportModal(false);
+        setCsvRawText('');
+        alert(`Successfully imported ${imported.length} leads!`);
+      };
+
+      // Populate Script Text
+      const renderScriptText = () => {
+        if (!selectedScript) return '';
+        const l = selectedLead || {
+          contactName: '[Landlord Name]',
+          title: '[Property Address]',
+          price: '[Rent Amount]',
+          bedrooms: '[Bedrooms]',
+          location: '[Location]'
+        };
+
+        return selectedScript.text
+          .replace(/{Landlord_Name}/g, l.contactName || '[Landlord Name]')
+          .replace(/{Property_Address}/g, l.title || '[Property Address]')
+          .replace(/{Rent_Amount}/g, l.price || '[Rent Amount]')
+          .replace(/{Bedrooms}/g, l.bedrooms || '[Bedrooms]')
+          .replace(/{Location}/g, l.location || '[Location]');
+      };
+
+      return (
+        <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
+          {/* Header */}
+          <header className="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-30">
+            <div className="max-w-7xl mx-mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="bg-indigo-600 p-2 rounded-lg font-bold text-xl tracking-wider">
+                  RCRM
+                </div>
+                <div>
+                  <h1 className="font-bold text-lg leading-none">Rental Property CRM</h1>
+                  <p className="text-xs text-slate-400">Sourcing & Landlord Scripting Engine</p>
+                </div>
+              </div>
+
+              {/* Navigation Tabs */}
+              <nav className="flex space-x-1 bg-slate-800 p-1 rounded-lg">
+                {[
+                  { id: 'crm', label: 'CRM Pipeline' },
+                  { id: 'scraper', label: 'Property Scraper' },
+                  { id: 'scripts', label: 'Scripts & Pitches' },
+                  { id: 'analytics', label: 'Analytics' }
+                ].map(tab => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
+                      activeTab === tab.id ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:text-white hover:bg-slate-700'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </nav>
+
+              {/* Header Action Controls */}
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => setShowImportModal(true)}
+                  className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium rounded-md border border-slate-700 transition"
+                >
+                  Import CSV
+                </button>
+                <button
+                  onClick={exportCSV}
+                  className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium rounded-md transition shadow"
+                >
+                  Export CSV
+                </button>
+              </div>
+            </div>
+          </header>
+
+          {/* KPI Dashboard Summary */}
+          <section className="bg-white border-b border-slate-200 py-4 shadow-sm">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-5 gap-4">
+              <div className="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                <p className="text-xs font-medium text-slate-500">Total Listings</p>
+                <p className="text-2xl font-bold text-slate-900 mt-1">{totalLeads}</p>
+              </div>
+              <div className="bg-amber-50 p-3 rounded-lg border border-amber-200">
+                <p className="text-xs font-medium text-amber-700">Contacted</p>
+                <p className="text-2xl font-bold text-amber-900 mt-1">{contacted}</p>
+              </div>
+              <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                <p className="text-xs font-medium text-blue-700">In Negotiation</p>
+                <p className="text-2xl font-bold text-blue-900 mt-1">{inNegotiation}</p>
+              </div>
+              <div className="bg-emerald-50 p-3 rounded-lg border border-emerald-200">
+                <p className="text-xs font-medium text-emerald-700">Deals Closed</p>
+                <p className="text-2xl font-bold text-emerald-900 mt-1">{closed}</p>
+              </div>
+              <div className="bg-indigo-50 p-3 rounded-lg border border-indigo-200 col-span-2 md:col-span-1">
+                <p className="text-xs font-medium text-indigo-700">Pipeline Rent Vol.</p>
+                <p className="text-2xl font-bold text-indigo-900 mt-1">£{pipelineRent.toLocaleString()}</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Main Content Body */}
+          <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            
+            {/* TAB 1: CRM PIPELINE */}
+            {activeTab === 'crm' && (
+              <div className="space-y-4">
+                {/* Search & Filter Bar */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                  <div className="flex-1 flex items-center space-x-2">
+                    <input
+                      type="text"
+                      placeholder="Search title, location, or landlord name..."
+                      value={searchTerm}
+                      onChange={e => setSearchTerm(e.target.value)}
+                      className="w-full md:w-80 px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                    <select
+                      value={statusFilter}
+                      onChange={e => setStatusFilter(e.target.value)}
+                      className="px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                    >
+                      <option value="All">All Statuses</option>
+                      <option value="New Lead">New Lead</option>
+                      <option value="Contacted">Contacted</option>
+                      <option value="In Negotiation">In Negotiation</option>
+                      <option value="Agreement Signed">Agreement Signed</option>
+                      <option value="Rejected">Rejected</option>
+                    </select>
+                  </div>
+
+                  {/* View Mode Switcher */}
+                  <div className="flex items-center space-x-1 bg-slate-100 p-1 rounded-lg self-start md:self-auto">
+                    <button
+                      onClick={() => setViewMode('table')}
+                      className={`px-3 py-1.5 text-xs font-semibold rounded-md transition ${
+                        viewMode === 'table' ? 'bg-white shadow text-slate-900' : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      Table View
+                    </button>
+                    <button
+                      onClick={() => setViewMode('kanban')}
+                      className={`px-3 py-1.5 text-xs font-semibold rounded-md transition ${
+                        viewMode === 'kanban' ? 'bg-white shadow text-slate-900' : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      Kanban Board
+                    </button>
+                  </div>
+                </div>
+
+                {/* Table View */}
+                {viewMode === 'table' && (
+                  <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left border-collapse">
+                        <thead>
+                          <tr className="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                            <th className="px-4 py-3">Property Title</th>
+                            <th className="px-4 py-3">Location</th>
+                            <th className="px-4 py-3">Rent / Mo</th>
+                            <th className="px-4 py-3">Landlord / Contact</th>
+                            <th className="px-4 py-3">Status</th>
+                            <th className="px-4 py-3 text-right">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-200 text-sm">
+                          {filteredLeads.map(lead => (
+                            <tr key={lead.id} className="hover:bg-slate-50 transition">
+                              <td className="px-4 py-3 font-medium text-slate-900">{lead.title}</td>
+                              <td className="px-4 py-3 text-slate-600">{lead.location}</td>
+                              <td className="px-4 py-3 font-bold text-indigo-600">£{lead.price}</td>
+                              <td className="px-4 py-3">
+                                <div>{lead.contactName}</div>
+                                <div className="text-xs text-slate-400">{lead.phone}</div>
+                              </td>
+                              <td className="px-4 py-3">
+                                <select
+                                  value={lead.status}
+                                  onChange={e => updateLeadStatus(lead.id, e.target.value)}
+                                  className="text-xs font-medium px-2 py-1 rounded-full border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                >
+                                  <option value="New Lead">New Lead</option>
+                                  <option value="Contacted">Contacted</option>
+                                  <option value="In Negotiation">In Negotiation</option>
+                                  <option value="Agreement Signed">Agreement Signed</option>
+                                  <option value="Rejected">Rejected</option>
+                                </select>
+                              </td>
+                              <td className="px-4 py-3 text-right space-x-2">
+                                <button
+                                  onClick={() => setSelectedLead(lead)}
+                                  className="text-xs px-2.5 py-1 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 font-semibold rounded transition"
+                                >
+                                  View / Log
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    setSelectedLead(lead);
+                                    setActiveTab('scripts');
+                                  }}
+                                  className="text-xs px-2.5 py-1 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 font-semibold rounded transition"
+                                >
+                                  Script
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                          {filteredLeads.length === 0 && (
+                            <tr>
+                              <td colSpan="6" className="text-center py-8 text-slate-400 text-sm">
+                                No property leads found matching criteria.
+                              </td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* Kanban View */}
+                {viewMode === 'kanban' && (
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-start">
+                    {['New Lead', 'Contacted', 'In Negotiation', 'Agreement Signed'].map(statusColumn => {
+                      const colLeads = filteredLeads.filter(l => l.status === statusColumn);
+                      return (
+                        <div key={statusColumn} className="bg-slate-100 rounded-xl p-3 border border-slate-200">
+                          <div className="flex items-center justify-between mb-3 px-1">
+                            <h3 className="font-bold text-sm text-slate-700">{statusColumn}</h3>
+                            <span className="text-xs bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full font-bold">
+                              {colLeads.length}
+                            </span>
+                          </div>
+                          <div className="space-y-2">
+                            {colLeads.map(lead => (
+                              <div
+                                key={lead.id}
+                                className="bg-white p-3 rounded-lg border border-slate-200 shadow-sm hover:shadow transition"
+                              >
+                                <h4 className="font-semibold text-sm text-slate-900 leading-snug">{lead.title}</h4>
+                                <p className="text-xs text-slate-500 mt-1">{lead.location}</p>
+                                <div className="flex justify-between items-center mt-3 pt-2 border-t border-slate-100">
+                                  <span className="font-bold text-indigo-600 text-sm">£{lead.price}/mo</span>
+                                  <button
+                                    onClick={() => setSelectedLead(lead)}
+                                    className="text-xs text-indigo-600 hover:underline font-semibold"
+                                  >
+                                    Details →
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* TAB 2: SCRAPER SIMULATOR */}
+            {activeTab === 'scraper' && (
+              <div className="max-w-3xl mx-auto space-y-6">
+                <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                  <h2 className="text-lg font-bold text-slate-900 mb-2">Automated Rental Property Scraper</h2>
+                  <p className="text-sm text-slate-500 mb-6">
+                    Simulate real-time scraping of UK rental portals (Rightmove, Zoopla, OpenRent) to import new leads automatically.
+                  </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-600 mb-1">Target Location</label>
+                      <input
+                        type="text"
+                        value={scraperLocation}
+                        onChange={e => setScraperLocation(e.target.value)}
+                        className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-600 mb-1">Property Type</label>
+                      <select
+                        value={scraperType}
+                        onChange={e => setScraperType(e.target.value)}
+                        className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white"
+                      >
+                        <option value="All">All Types</option>
+                        <option value="Flat">Flats / Apartments</option>
+                        <option value="House">Houses</option>
+                        <option value="HMO">HMOs</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-600 mb-1">Max Items</label>
+                      <input
+                        type="number"
+                        min="1"
+                        max="20"
+                        value={scraperCount}
+                        onChange={e => setScraperCount(e.target.value)}
+                        className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={runScraper}
+                    disabled={isScraping}
+                    className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg shadow transition disabled:opacity-50"
+                  >
+                    {isScraping ? 'Scraping Active Ads...' : 'Run Property Scraper'}
+                  </button>
+                </div>
+
+                {/* Scraper Terminal Output */}
+                <div className="bg-slate-900 rounded-xl p-4 font-mono text-xs text-slate-300 shadow-inner min-h-[160px]">
+                  <div className="flex justify-between border-b border-slate-800 pb-2 mb-2 text-slate-500">
+                    <span>Scraper Log Terminal</span>
+                    <span>STATUS: {isScraping ? 'RUNNING' : 'READY'}</span>
+                  </div>
+                  {scraperLogs.length === 0 ? (
+                    <p className="text-slate-600">Click "Run Property Scraper" to initiate ad discovery...</p>
+                  ) : (
+                    scraperLogs.map((log, index) => (
+                      <p key={index} className="py-0.5">{log}</p>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* TAB 3: SCRIPTS & PITCHES */}
+            {activeTab === 'scripts' && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Script Selector */}
+                <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2">
+                  <h2 className="font-bold text-sm text-slate-800 mb-3">Script Templates</h2>
+                  {SCRIPTS.map(script => (
+                    <button
+                      key={script.id}
+                      onClick={() => setSelectedScript(script)}
+                      className={`w-full text-left p-3 rounded-lg border text-xs font-medium transition ${
+                        selectedScript.id === script.id
+                          ? 'border-indigo-600 bg-indigo-50 text-indigo-900 font-bold'
+                          : 'border-slate-200 hover:bg-slate-50 text-slate-700'
+                      }`}
+                    >
+                      {script.title}
+                    </button>
+                  ))}
+
+                  {/* Active Selected Lead Variable Selector */}
+                  <div className="pt-4 border-t border-slate-200 mt-4">
+                    <label className="block text-xs font-semibold text-slate-600 mb-1">Populate Data From Lead:</label>
+                    <select
+                      value={selectedLead ? selectedLead.id : ''}
+                      onChange={e => {
+                        const found = leads.find(l => l.id === e.target.value);
+                        setSelectedLead(found || null);
+                      }}
+                      className="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                    >
+                      <option value="">-- Choose Lead --</option>
+                      {leads.map(l => (
+                        <option key={l.id} value={l.id}>{l.contactName} - {l.title}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Interactive Script Output */}
+                <div className="md:col-span-2 bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                  <div>
+                    <div className="flex justify-between items-center mb-4 pb-2 border-b border-slate-200">
+                      <h2 className="font-bold text-base text-slate-900">{selectedScript.title}</h2>
+                      <span className="text-xs bg-indigo-100 text-indigo-800 font-semibold px-2.5 py-0.5 rounded-full">
+                        {selectedScript.category}
+                      </span>
+                    </div>
+
+                    <textarea
+                      readOnly
+                      value={renderScriptText()}
+                      rows="12"
+                      className="w-full p-4 text-sm font-mono bg-slate-50 border border-slate-200 rounded-lg focus:outline-none custom-scrollbar"
+                    />
+                  </div>
+
+                  <div className="mt-4 flex space-x-3 justify-end">
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(renderScriptText());
+                        alert('Script copied to clipboard!');
+                      }}
+                      className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-lg shadow transition"
+                    >
+                      Copy Script
+                    </button>
+                    {selectedLead && selectedLead.email && (
+                      <a
+                        href={`mailto:${selectedLead.email}?subject=Corporate Lease Enquiry&body=${encodeURIComponent(renderScriptText())}`}
+                        className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg shadow transition inline-block"
+                      >
+                        Launch Email
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB 4: ANALYTICS */}
+            {activeTab === 'analytics' && (
+              <div className="space-y-6">
+                <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                  <h2 className="text-lg font-bold text-slate-900 mb-4">Lead Status Breakdown</h2>
+                  <div className="space-y-3">
+                    {[
+                      { status: 'New Lead', color: 'bg-slate-500' },
+                      { status: 'Contacted', color: 'bg-amber-500' },
+                      { status: 'In Negotiation', color: 'bg-blue-500' },
+                      { status: 'Agreement Signed', color: 'bg-emerald-500' }
+                    ].map(item => {
+                      const count = leads.filter(l => l.status === item.status).length;
+                      const percentage = totalLeads ? Math.round((count / totalLeads) * 100) : 0;
+                      return (
+                        <div key={item.status}>
+                          <div className="flex justify-between text-xs font-medium text-slate-700 mb-1">
+                            <span>{item.status} ({count})</span>
+                            <span>{percentage}%</span>
+                          </div>
+                          <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                            <div className={`${item.color} h-2.5 rounded-full`} style={{ width: `${percentage}%` }}></div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+          </main>
+
+          {/* Lead Detail Drawer Modal */}
+          {selectedLead && activeTab === 'crm' && (
+            <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 flex justify-end">
+              <div className="w-full max-w-md bg-white h-full shadow-2xl p-6 overflow-y-auto flex flex-col justify-between custom-scrollbar">
+                <div>
+                  <div className="flex justify-between items-start border-b border-slate-200 pb-4 mb-4">
+                    <div>
+                      <h2 className="font-bold text-lg text-slate-900">{selectedLead.title}</h2>
+                      <p className="text-xs text-slate-500">{selectedLead.location}</p>
+                    </div>
+                    <button
+                      onClick={() => setSelectedLead(null)}
+                      className="text-slate-400 hover:text-slate-600 font-bold text-lg"
+                    >
+                      ✕
+                    </button>
+                  </div>
+
+                  <div className="space-y-4 text-xs text-slate-700">
+                    <div className="grid grid-cols-2 gap-2 bg-slate-50 p-3 rounded-lg border border-slate-100">
+                      <div>
+                        <span className="text-slate-400 block">Rent Amount:</span>
+                        <span className="font-bold text-indigo-600 text-sm">£{selectedLead.price}/mo</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-400 block">Bedrooms:</span>
+                        <span className="font-semibold">{selectedLead.bedrooms} Beds</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-400 block">Contact:</span>
+                        <span className="font-semibold">{selectedLead.contactName}</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-400 block">Phone:</span>
+                        <span className="font-semibold">{selectedLead.phone || 'N/A'}</span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-slate-500 font-semibold mb-1">Pipeline Status</label>
+                      <select
+                        value={selectedLead.status}
+                        onChange={e => updateLeadStatus(selectedLead.id, e.target.value)}
+                        className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                      >
+                        <option value="New Lead">New Lead</option>
+                        <option value="Contacted">Contacted</option>
+                        <option value="In Negotiation">In Negotiation</option>
+                        <option value="Agreement Signed">Agreement Signed</option>
+                        <option value="Rejected">Rejected</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-slate-500 font-semibold mb-1">Interaction Log & Notes</label>
+                      <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 max-h-40 overflow-y-auto space-y-2 mb-2 custom-scrollbar">
+                        {(selectedLead.history || []).map((h, idx) => (
+                          <div key={idx} className="border-b border-slate-200 pb-1 last:border-0">
+                            <span className="text-[10px] text-slate-400 block">{h.date}</span>
+                            <p className="text-xs text-slate-800">{h.text}</p>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="flex space-x-2">
+                        <input
+                          type="text"
+                          placeholder="Log call outcome or note..."
+                          value={newNoteText}
+                          onChange={e => setNewNoteText(e.target.value)}
+                          className="flex-1 px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        />
+                        <button
+                          onClick={handleAddNote}
+                          className="px-3 py-1.5 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-500 transition text-xs"
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t border-slate-200 mt-6">
+                  <button
+                    onClick={() => setSelectedLead(null)}
+                    className="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-lg transition"
+                  >
+                    Close Panel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Import CSV Modal */}
+          {showImportModal && (
+            <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-xl shadow-xl max-w-lg w-full p-6 space-y-4">
+                <div className="flex justify-between items-center border-b border-slate-200 pb-3">
+                  <h3 className="font-bold text-base text-slate-900">Import CSV Leads</h3>
+                  <button onClick={() => setShowImportModal(false)} className="text-slate-400 hover:text-slate-600 font-bold">✕</button>
+                </div>
+
+                <p className="text-xs text-slate-500">
+                  Paste raw CSV text below. Format: <br />
+                  <code className="bg-slate-100 p-1 rounded block mt-1 text-[11px] text-slate-700">
+                    Title, Location, Price, Bedrooms, PropertyType, ContactName, Phone, Email, Status, Notes
+                  </code>
+                </p>
+
+                <textarea
+                  rows="6"
+                  placeholder="Paste CSV rows here..."
+                  value={csvRawText}
+                  onChange={e => setCsvRawText(e.target.value)}
+                  className="w-full p-3 text-xs font-mono border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                />
+
+                <div className="flex justify-end space-x-2">
+                  <button
+                    onClick={() => setShowImportModal(false)}
+                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleCsvImport}
+                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-lg"
+                  >
+                    Import Data
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
 </body>
 </html>
