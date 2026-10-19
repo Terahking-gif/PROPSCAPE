@@ -26,12 +26,13 @@
   <script type="text/babel">
     const { useState, useEffect } = React;
 
-    // Initial Sample Data
+    // Initial Sample Data with user engagement logs
     const INITIAL_LEADS = [
       {
         id: '1',
         title: '3 Bed Terraced House - High Street',
         location: 'Grays, RM17',
+        postcode: 'RM17',
         price: 1650,
         bedrooms: 3,
         propertyType: 'House',
@@ -42,12 +43,14 @@
         status: 'New Lead',
         dateAdded: '2026-10-15',
         notes: 'Listed 2 days ago. Motivated landlord looking for long term tenant.',
-        history: [{ date: '2026-10-15 10:30', text: 'Scraped from Rightmove automatically.' }]
+        engagedBy: 'Alex (Sourcing Manager)',
+        history: [{ date: '2026-10-15 10:30', text: 'Scraped from Rightmove automatically by Alex.' }]
       },
       {
         id: '2',
         title: '2 Bed Modern Apartment - Riverside',
         location: 'Grays, RM17',
+        postcode: 'RM17',
         price: 1350,
         bedrooms: 2,
         propertyType: 'Flat',
@@ -58,15 +61,17 @@
         status: 'Contacted',
         dateAdded: '2026-10-14',
         notes: 'Left initial voicemail. Sent Rent-to-Rent corporate proposal email.',
+        engagedBy: 'Sarah (Negotiator)',
         history: [
-          { date: '2026-10-14 09:15', text: 'Imported into CRM.' },
-          { date: '2026-10-14 14:20', text: 'Sent initial WhatsApp and follow-up email.' }
+          { date: '2026-10-14 09:15', text: 'Imported into CRM by Sarah.' },
+          { date: '2026-10-14 14:20', text: 'Sent initial WhatsApp and follow-up email by Sarah.' }
         ]
       },
       {
         id: '3',
         title: '4 Bed Semi-Detached Family Home',
         location: 'London, E14',
+        postcode: 'E14',
         price: 2800,
         bedrooms: 4,
         propertyType: 'House',
@@ -77,6 +82,7 @@
         status: 'In Negotiation',
         dateAdded: '2026-10-10',
         notes: 'Had phone call. Open to corporate lease if guaranteed rent terms fit.',
+        engagedBy: 'Alex (Sourcing Manager)',
         history: [
           { date: '2026-10-10 11:00', text: 'Scraped & added.' },
           { date: '2026-10-12 16:45', text: 'Called landlord - discussed 3 year lease agreement.' }
@@ -86,6 +92,7 @@
         id: '4',
         title: '1 Bed Luxury Suite',
         location: 'Manchester, M1',
+        postcode: 'M1',
         price: 950,
         bedrooms: 1,
         propertyType: 'Flat',
@@ -96,11 +103,19 @@
         status: 'Agreement Signed',
         dateAdded: '2026-10-05',
         notes: 'Agreement signed for 24 months corporate management.',
+        engagedBy: 'Jordan (Director)',
         history: [
-          { date: '2026-10-05 10:00', text: 'Created lead manually.' },
+          { date: '2026-10-05 10:00', text: 'Created lead manually by Jordan.' },
           { date: '2026-10-18 15:00', text: 'Contract signed by landlord.' }
         ]
       }
+    ];
+
+    const TEAM_USERS = [
+      'Alex (Sourcing Manager)',
+      'Sarah (Negotiator)',
+      'Jordan (Director)',
+      'Marcus (Acquisitions)'
     ];
 
     const SCRIPTS = [
@@ -108,25 +123,19 @@
         id: 'direct-pitch',
         title: '1. Direct Phone Call Pitch',
         category: 'Phone',
-        text: `Hi {Landlord_Name},\n\nMy name is [Your Name] from [Your Company]. I'm calling regarding your property listing for the {Bedrooms} bed property at {Property_Address}.\n\nI noticed it's currently listed for £{Rent_Amount}/month. We specialize in long-term corporate lets for vetted professional tenants in {Location}.\n\nWe offer landlords guaranteed rent, 0% management fees, and full property maintenance for a 3-5 year term. Do you have 2 minutes to discuss if this model fits your goals for this property?`
+        text: `Hi {Landlord_Name},\n\nMy name is {User_Name} from [Your Company]. I'm calling regarding your property listing for the {Bedrooms} bed property at {Property_Address}.\n\nI noticed it's currently listed for £{Rent_Amount}/month. We specialize in long-term corporate lets for vetted professional tenants in {Location}.\n\nWe offer landlords guaranteed rent, 0% management fees, and full property maintenance for a 3-5 year term. Do you have 2 minutes to discuss if this model fits your goals for this property?`
       },
       {
         id: 'voicemail',
         title: '2. Voicemail Script',
         category: 'Phone',
-        text: `Hi {Landlord_Name}, this is [Your Name] calling about your {Bedrooms} bed property on {Property_Address}.\n\nWe represent corporate clients seeking quality long-term rentals in {Location} and can offer guaranteed monthly rent with full upkeep.\n\nPlease give me a call back on [Your Phone] or reply to my email at [Your Email]. Thanks!`
+        text: `Hi {Landlord_Name}, this is {User_Name} calling about your {Bedrooms} bed property on {Property_Address}.\n\nWe represent corporate clients seeking quality long-term rentals in {Location} and can offer guaranteed monthly rent with full upkeep.\n\nPlease give me a call back or reply to my email. Thanks!`
       },
       {
         id: 'email-outreach',
         title: '3. First Outreach Email / WhatsApp',
         category: 'Email',
-        text: `Subject: Corporate Lease Enquiry - {Property_Address}\n\nDear {Landlord_Name},\n\nI hope you are well.\n\nI am contacting you regarding your property at {Property_Address}, listed at £{Rent_Amount}/pm.\n\nWe are currently expanding our portfolio of professional corporate housing in {Location} and are looking to secure a property on a 3 to 5 year guaranteed lease agreement.\n\nKey Benefits to You:\n- Guaranteed rent on time every month (no void periods)\n- Zero agent fees or commission\n- Regular professional cleaning and maintenance included\n\nWould you be open to a quick 5-minute call this week to see if this aligns with your plans?\n\nBest regards,\n[Your Name]`
-      },
-      {
-        id: 'post-viewing',
-        title: '4. Post-Viewing Follow-Up',
-        category: 'Email',
-        text: `Subject: Follow-up on {Property_Address}\n\nHi {Landlord_Name},\n\nThank you for taking the time to discuss {Property_Address}.\n\nAs discussed, we would love to proceed with a guaranteed rent offer of £{Rent_Amount} per month on a 3-year agreement starting next month.\n\nI have attached our standard sample agreement and company references for your review. Please let me know when you'd like to finalize the start date.\n\nBest regards,\n[Your Name]`
+        text: `Subject: Corporate Lease Enquiry - {Property_Address}\n\nDear {Landlord_Name},\n\nI hope you are well.\n\nI am contacting you regarding your property at {Property_Address}, listed at £{Rent_Amount}/pm.\n\nWe are currently expanding our portfolio of professional corporate housing in {Location} and are looking to secure a property on a 3 to 5 year guaranteed lease agreement.\n\nKey Benefits to You:\n- Guaranteed rent on time every month (no void periods)\n- Zero agent fees or commission\n- Regular professional cleaning and maintenance included\n\nWould you be open to a quick 5-minute call this week to see if this aligns with your plans?\n\nBest regards,\n{User_Name}`
       }
     ];
 
@@ -136,15 +145,23 @@
         return saved ? JSON.parse(saved) : INITIAL_LEADS;
       });
 
-      const [activeTab, setActiveTab] = useState('crm'); // crm | scraper | scripts | analytics
+      const [currentUser, setCurrentUser] = useState(() => {
+        return localStorage.getItem('property_crm_user') || TEAM_USERS[0];
+      });
+
+      const [activeTab, setActiveTab] = useState('crm'); // crm | scraper | map | scripts | analytics
       const [viewMode, setViewMode] = useState('table'); // table | kanban
       const [searchTerm, setSearchTerm] = useState('');
       const [statusFilter, setStatusFilter] = useState('All');
+      const [bedroomFilter, setBedroomFilter] = useState('All');
+      const [postcodeFilter, setPostcodeFilter] = useState('All');
+      
       const [selectedLead, setSelectedLead] = useState(null);
       const [selectedScript, setSelectedScript] = useState(SCRIPTS[0]);
       
       // Scraper state
       const [scraperLocation, setScraperLocation] = useState('Grays');
+      const [scraperPostcode, setScraperPostcode] = useState('RM17');
       const [scraperType, setScraperType] = useState('All');
       const [scraperCount, setScraperCount] = useState(5);
       const [isScraping, setIsScraping] = useState(false);
@@ -162,19 +179,31 @@
       }, [leads]);
 
       useEffect(() => {
+        localStorage.setItem('property_crm_user', currentUser);
+      }, [currentUser]);
+
+      useEffect(() => {
         if (window.lucide) {
           window.lucide.createIcons();
         }
       });
+
+      // Extract unique postcodes for filtering
+      const availablePostcodes = ['All', ...new Set(leads.map(l => l.postcode || l.location.split(',')[1]?.trim() || 'General'))];
 
       // Filtered Leads
       const filteredLeads = leads.filter(lead => {
         const matchesSearch = 
           lead.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
           lead.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          lead.contactName.toLowerCase().includes(searchTerm.toLowerCase());
+          lead.contactName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (lead.postcode && lead.postcode.toLowerCase().includes(searchTerm.toLowerCase()));
+        
         const matchesStatus = statusFilter === 'All' || lead.status === statusFilter;
-        return matchesSearch && matchesStatus;
+        const matchesBedrooms = bedroomFilter === 'All' || String(lead.bedrooms) === bedroomFilter;
+        const matchesPostcode = postcodeFilter === 'All' || lead.postcode === postcodeFilter || lead.location.includes(postcodeFilter);
+
+        return matchesSearch && matchesStatus && matchesBedrooms && matchesPostcode;
       });
 
       // Stats
@@ -190,25 +219,26 @@
           if (l.id === id) {
             const updatedHistory = [
               ...(l.history || []),
-              { date: new Date().toLocaleString(), text: `Status updated to ${newStatus}` }
+              { date: new Date().toLocaleString(), text: `Status updated to ${newStatus} by ${currentUser}` }
             ];
-            return { ...l, status: newStatus, history: updatedHistory };
+            return { ...l, status: newStatus, engagedBy: currentUser, history: updatedHistory };
           }
           return l;
         }));
         if (selectedLead && selectedLead.id === id) {
-          setSelectedLead(prev => ({ ...prev, status: newStatus }));
+          setSelectedLead(prev => ({ ...prev, status: newStatus, engagedBy: currentUser }));
         }
       };
 
       // Add Note to Selected Lead
       const handleAddNote = () => {
         if (!newNoteText.trim() || !selectedLead) return;
-        const noteEntry = { date: new Date().toLocaleString(), text: newNoteText };
+        const noteEntry = { date: new Date().toLocaleString(), text: `${newNoteText} (Logged by ${currentUser})` };
         setLeads(prev => prev.map(l => {
           if (l.id === selectedLead.id) {
             return {
               ...l,
+              engagedBy: currentUser,
               notes: l.notes ? `${l.notes}\n[${noteEntry.date}] ${newNoteText}` : newNoteText,
               history: [...(l.history || []), noteEntry]
             };
@@ -217,6 +247,7 @@
         }));
         setSelectedLead(prev => ({
           ...prev,
+          engagedBy: currentUser,
           notes: prev.notes ? `${prev.notes}\n[${noteEntry.date}] ${newNoteText}` : newNoteText,
           history: [...(prev.history || []), noteEntry]
         }));
@@ -226,22 +257,24 @@
       // Scraper Simulation
       const runScraper = () => {
         setIsScraping(true);
-        setScraperLogs(['[INIT] Connecting to property aggregators...']);
+        setScraperLogs([`[INIT] Connecting to property aggregators for ${scraperLocation} (${scraperPostcode})...`]);
         
         setTimeout(() => {
-          setScraperLogs(prev => [...prev, `[SCRAPE] Searching ads in ${scraperLocation} (${scraperType})...`]);
+          setScraperLogs(prev => [...prev, `[SCRAPE] Finding ads matching criteria...`]);
         }, 1000);
 
         setTimeout(() => {
           const newScraped = [];
           for (let i = 1; i <= Number(scraperCount); i++) {
             const id = Date.now() + i + '';
+            const beds = Math.floor(Math.random() * 3) + 1;
             newScraped.push({
               id,
-              title: `${Math.floor(Math.random() * 3 + 1)} Bed Flat in ${scraperLocation}`,
-              location: `${scraperLocation}, UK`,
+              title: `${beds} Bed Flat / House in ${scraperLocation}`,
+              location: `${scraperLocation}, ${scraperPostcode}`,
+              postcode: scraperPostcode,
               price: Math.floor(Math.random() * 800) + 1100,
-              bedrooms: Math.floor(Math.random() * 3) + 1,
+              bedrooms: beds,
               propertyType: scraperType === 'All' ? 'Flat' : scraperType,
               source: 'Auto Scraper',
               contactName: `Landlord ${i}`,
@@ -249,8 +282,9 @@
               email: `landlord${i}@example.com`,
               status: 'New Lead',
               dateAdded: new Date().toISOString().split('T')[0],
-              notes: `Auto scraped listing from ${scraperLocation}.`,
-              history: [{ date: new Date().toLocaleString(), text: 'Scraped from property ad.' }]
+              engagedBy: currentUser,
+              notes: `Auto scraped listing in ${scraperPostcode}.`,
+              history: [{ date: new Date().toLocaleString(), text: `Scraped and assigned via ${currentUser}` }]
             });
           }
           setLeads(prev => [...newScraped, ...prev]);
@@ -261,9 +295,9 @@
 
       // CSV Export
       const exportCSV = () => {
-        const headers = ['ID', 'Title', 'Location', 'Price', 'Bedrooms', 'PropertyType', 'ContactName', 'Phone', 'Email', 'Status', 'Notes'];
+        const headers = ['ID', 'Title', 'Location', 'Postcode', 'Price', 'Bedrooms', 'PropertyType', 'ContactName', 'Phone', 'Email', 'Status', 'EngagedBy', 'Notes'];
         const rows = filteredLeads.map(l => [
-          l.id, `"${l.title}"`, `"${l.location}"`, l.price, l.bedrooms, l.propertyType, `"${l.contactName}"`, `"${l.phone}"`, `"${l.email}"`, `"${l.status}"`, `"${(l.notes || '').replace(/"/g, '""')}"`
+          l.id, `"${l.title}"`, `"${l.location}"`, l.postcode || '', l.price, l.bedrooms, l.propertyType, `"${l.contactName}"`, `"${l.phone}"`, `"${l.email}"`, `"${l.status}"`, `"${l.engagedBy || ''}"`, `"${(l.notes || '').replace(/"/g, '""')}"`
         ]);
         const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
         const encodedUri = encodeURI(csvContent);
@@ -289,17 +323,19 @@
               id: Date.now() + i + '',
               title: cols[0] || 'Imported Property',
               location: cols[1] || 'Unknown',
-              price: Number(cols[2]) || 1200,
-              bedrooms: Number(cols[3]) || 2,
-              propertyType: cols[4] || 'House',
+              postcode: cols[2] || 'RM17',
+              price: Number(cols[3]) || 1200,
+              bedrooms: Number(cols[4]) || 2,
+              propertyType: cols[5] || 'House',
               source: 'CSV Import',
-              contactName: cols[5] || 'Landlord',
-              phone: cols[6] || '',
-              email: cols[7] || '',
-              status: cols[8] || 'New Lead',
-              notes: cols[9] || '',
+              contactName: cols[6] || 'Landlord',
+              phone: cols[7] || '',
+              email: cols[8] || '',
+              status: cols[9] || 'New Lead',
+              engagedBy: currentUser,
+              notes: cols[10] || '',
               dateAdded: new Date().toISOString().split('T')[0],
-              history: [{ date: new Date().toLocaleString(), text: 'Imported via CSV' }]
+              history: [{ date: new Date().toLocaleString(), text: `Imported via CSV by ${currentUser}` }]
             });
           }
         }
@@ -325,29 +361,31 @@
           .replace(/{Property_Address}/g, l.title || '[Property Address]')
           .replace(/{Rent_Amount}/g, l.price || '[Rent Amount]')
           .replace(/{Bedrooms}/g, l.bedrooms || '[Bedrooms]')
-          .replace(/{Location}/g, l.location || '[Location]');
+          .replace(/{Location}/g, l.location || '[Location]')
+          .replace(/{User_Name}/g, currentUser.split(' ')[0]);
       };
 
       return (
         <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
           {/* Header */}
           <header className="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-30">
-            <div className="max-w-7xl mx-mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className="bg-indigo-600 p-2 rounded-lg font-bold text-xl tracking-wider">
                   RCRM
                 </div>
                 <div>
                   <h1 className="font-bold text-lg leading-none">Rental Property CRM</h1>
-                  <p className="text-xs text-slate-400">Sourcing & Landlord Scripting Engine</p>
+                  <p className="text-xs text-slate-400">Sourcing & Map Integration</p>
                 </div>
               </div>
 
               {/* Navigation Tabs */}
-              <nav className="flex space-x-1 bg-slate-800 p-1 rounded-lg">
+              <nav className="hidden md:flex space-x-1 bg-slate-800 p-1 rounded-lg">
                 {[
                   { id: 'crm', label: 'CRM Pipeline' },
                   { id: 'scraper', label: 'Property Scraper' },
+                  { id: 'map', label: 'Map & Postcodes' },
                   { id: 'scripts', label: 'Scripts & Pitches' },
                   { id: 'analytics', label: 'Analytics' }
                 ].map(tab => (
@@ -363,23 +401,49 @@
                 ))}
               </nav>
 
-              {/* Header Action Controls */}
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => setShowImportModal(true)}
-                  className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium rounded-md border border-slate-700 transition"
-                >
-                  Import CSV
-                </button>
+              {/* User Account Switcher & Actions */}
+              <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
+                  <span className="text-[10px] text-slate-400 uppercase font-semibold">User:</span>
+                  <select
+                    value={currentUser}
+                    onChange={e => setCurrentUser(e.target.value)}
+                    className="bg-transparent text-xs text-white font-bold focus:outline-none cursor-pointer"
+                  >
+                    {TEAM_USERS.map(user => (
+                      <option key={user} value={user} className="bg-slate-900 text-white">{user}</option>
+                    ))}
+                  </select>
+                </div>
+
                 <button
                   onClick={exportCSV}
-                  className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium rounded-md transition shadow"
+                  className="hidden sm:block px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium rounded-md transition shadow"
                 >
                   Export CSV
                 </button>
               </div>
             </div>
           </header>
+
+          {/* Mobile Nav Bar */}
+          <div className="md:hidden bg-slate-800 px-4 py-2 flex space-x-1 overflow-x-auto text-white">
+            {[
+              { id: 'crm', label: 'Pipeline' },
+              { id: 'scraper', label: 'Scraper' },
+              { id: 'map', label: 'Map' },
+              { id: 'scripts', label: 'Scripts' },
+              { id: 'analytics', label: 'Analytics' }
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-3 py-1 text-xs font-semibold rounded ${activeTab === tab.id ? 'bg-indigo-600' : 'bg-slate-700'}`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
 
           {/* KPI Dashboard Summary */}
           <section className="bg-white border-b border-slate-200 py-4 shadow-sm">
@@ -413,48 +477,83 @@
             {/* TAB 1: CRM PIPELINE */}
             {activeTab === 'crm' && (
               <div className="space-y-4">
-                {/* Search & Filter Bar */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                  <div className="flex-1 flex items-center space-x-2">
-                    <input
-                      type="text"
-                      placeholder="Search title, location, or landlord name..."
-                      value={searchTerm}
-                      onChange={e => setSearchTerm(e.target.value)}
-                      className="w-full md:w-80 px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                    <select
-                      value={statusFilter}
-                      onChange={e => setStatusFilter(e.target.value)}
-                      className="px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
-                    >
-                      <option value="All">All Statuses</option>
-                      <option value="New Lead">New Lead</option>
-                      <option value="Contacted">Contacted</option>
-                      <option value="In Negotiation">In Negotiation</option>
-                      <option value="Agreement Signed">Agreement Signed</option>
-                      <option value="Rejected">Rejected</option>
-                    </select>
-                  </div>
+                {/* Search & Advanced Filters */}
+                <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                    <div className="flex-1 flex flex-wrap items-center gap-2">
+                      <input
+                        type="text"
+                        placeholder="Search title, location, or landlord..."
+                        value={searchTerm}
+                        onChange={e => setSearchTerm(e.target.value)}
+                        className="w-full md:w-64 px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      />
+                      
+                      {/* Postcode Filter */}
+                      <select
+                        value={postcodeFilter}
+                        onChange={e => setPostcodeFilter(e.target.value)}
+                        className="px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                      >
+                        <option value="All">All Postcodes</option>
+                        {availablePostcodes.filter(p => p !== 'All').map(pc => (
+                          <option key={pc} value={pc}>{pc}</option>
+                        ))}
+                      </select>
 
-                  {/* View Mode Switcher */}
-                  <div className="flex items-center space-x-1 bg-slate-100 p-1 rounded-lg self-start md:self-auto">
-                    <button
-                      onClick={() => setViewMode('table')}
-                      className={`px-3 py-1.5 text-xs font-semibold rounded-md transition ${
-                        viewMode === 'table' ? 'bg-white shadow text-slate-900' : 'text-slate-600 hover:text-slate-900'
-                      }`}
-                    >
-                      Table View
-                    </button>
-                    <button
-                      onClick={() => setViewMode('kanban')}
-                      className={`px-3 py-1.5 text-xs font-semibold rounded-md transition ${
-                        viewMode === 'kanban' ? 'bg-white shadow text-slate-900' : 'text-slate-600 hover:text-slate-900'
-                      }`}
-                    >
-                      Kanban Board
-                    </button>
+                      {/* Bedrooms Filter */}
+                      <select
+                        value={bedroomFilter}
+                        onChange={e => setBedroomFilter(e.target.value)}
+                        className="px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                      >
+                        <option value="All">All Bedrooms</option>
+                        <option value="1">1 Bed</option>
+                        <option value="2">2 Beds</option>
+                        <option value="3">3 Beds</option>
+                        <option value="4">4+ Beds</option>
+                      </select>
+
+                      {/* Status Filter */}
+                      <select
+                        value={statusFilter}
+                        onChange={e => setStatusFilter(e.target.value)}
+                        className="px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                      >
+                        <option value="All">All Statuses</option>
+                        <option value="New Lead">New Lead</option>
+                        <option value="Contacted">Contacted</option>
+                        <option value="In Negotiation">In Negotiation</option>
+                        <option value="Agreement Signed">Agreement Signed</option>
+                        <option value="Rejected">Rejected</option>
+                      </select>
+                    </div>
+
+                    {/* View Mode Switcher */}
+                    <div className="flex items-center space-x-1 bg-slate-100 p-1 rounded-lg self-start md:self-auto">
+                      <button
+                        onClick={() => setViewMode('table')}
+                        className={`px-3 py-1.5 text-xs font-semibold rounded-md transition ${
+                          viewMode === 'table' ? 'bg-white shadow text-slate-900' : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        Table
+                      </button>
+                      <button
+                        onClick={() => setViewMode('kanban')}
+                        className={`px-3 py-1.5 text-xs font-semibold rounded-md transition ${
+                          viewMode === 'kanban' ? 'bg-white shadow text-slate-900' : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        Kanban
+                      </button>
+                      <button
+                        onClick={() => setShowImportModal(true)}
+                        className="px-3 py-1.5 text-xs font-semibold bg-indigo-50 text-indigo-700 rounded-md hover:bg-indigo-100 transition"
+                      >
+                        Import CSV
+                      </button>
+                    </div>
                   </div>
                 </div>
 
@@ -466,9 +565,11 @@
                         <thead>
                           <tr className="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
                             <th className="px-4 py-3">Property Title</th>
-                            <th className="px-4 py-3">Location</th>
+                            <th className="px-4 py-3">Postcode / Location</th>
+                            <th className="px-4 py-3">Beds</th>
                             <th className="px-4 py-3">Rent / Mo</th>
-                            <th className="px-4 py-3">Landlord / Contact</th>
+                            <th className="px-4 py-3">Contact</th>
+                            <th className="px-4 py-3">Engaged By</th>
                             <th className="px-4 py-3">Status</th>
                             <th className="px-4 py-3 text-right">Actions</th>
                           </tr>
@@ -477,12 +578,19 @@
                           {filteredLeads.map(lead => (
                             <tr key={lead.id} className="hover:bg-slate-50 transition">
                               <td className="px-4 py-3 font-medium text-slate-900">{lead.title}</td>
-                              <td className="px-4 py-3 text-slate-600">{lead.location}</td>
+                              <td className="px-4 py-3 text-slate-600">
+                                <span className="font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded text-xs mr-1">
+                                  {lead.postcode || 'RM17'}
+                                </span>
+                                {lead.location}
+                              </td>
+                              <td className="px-4 py-3 text-slate-700 font-semibold">{lead.bedrooms} Bed</td>
                               <td className="px-4 py-3 font-bold text-indigo-600">£{lead.price}</td>
                               <td className="px-4 py-3">
                                 <div>{lead.contactName}</div>
                                 <div className="text-xs text-slate-400">{lead.phone}</div>
                               </td>
+                              <td className="px-4 py-3 text-xs text-slate-600 font-medium">{lead.engagedBy || 'Unassigned'}</td>
                               <td className="px-4 py-3">
                                 <select
                                   value={lead.status}
@@ -496,12 +604,12 @@
                                   <option value="Rejected">Rejected</option>
                                 </select>
                               </td>
-                              <td className="px-4 py-3 text-right space-x-2">
+                              <td className="px-4 py-3 text-right space-x-1">
                                 <button
                                   onClick={() => setSelectedLead(lead)}
                                   className="text-xs px-2.5 py-1 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 font-semibold rounded transition"
                                 >
-                                  View / Log
+                                  View
                                 </button>
                                 <button
                                   onClick={() => {
@@ -517,8 +625,8 @@
                           ))}
                           {filteredLeads.length === 0 && (
                             <tr>
-                              <td colSpan="6" className="text-center py-8 text-slate-400 text-sm">
-                                No property leads found matching criteria.
+                              <td colSpan="8" className="text-center py-8 text-slate-400 text-sm">
+                                No property leads found matching your filters.
                               </td>
                             </tr>
                           )}
@@ -547,7 +655,12 @@
                                 key={lead.id}
                                 className="bg-white p-3 rounded-lg border border-slate-200 shadow-sm hover:shadow transition"
                               >
-                                <h4 className="font-semibold text-sm text-slate-900 leading-snug">{lead.title}</h4>
+                                <div className="flex justify-between items-start">
+                                  <h4 className="font-semibold text-sm text-slate-900 leading-snug">{lead.title}</h4>
+                                  <span className="text-[10px] bg-indigo-50 text-indigo-700 font-bold px-1.5 py-0.5 rounded">
+                                    {lead.bedrooms} Bed
+                                  </span>
+                                </div>
                                 <p className="text-xs text-slate-500 mt-1">{lead.location}</p>
                                 <div className="flex justify-between items-center mt-3 pt-2 border-t border-slate-100">
                                   <span className="font-bold text-indigo-600 text-sm">£{lead.price}/mo</span>
@@ -575,12 +688,12 @@
                 <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                   <h2 className="text-lg font-bold text-slate-900 mb-2">Automated Rental Property Scraper</h2>
                   <p className="text-sm text-slate-500 mb-6">
-                    Simulate real-time scraping of UK rental portals (Rightmove, Zoopla, OpenRent) to import new leads automatically.
+                    Simulate real-time scraping of UK rental portals with automatic postcode and team user assignment.
                   </p>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div>
-                      <label className="block text-xs font-semibold text-slate-600 mb-1">Target Location</label>
+                      <label className="block text-xs font-semibold text-slate-600 mb-1">Target Location Name</label>
                       <input
                         type="text"
                         value={scraperLocation}
@@ -588,6 +701,18 @@
                         className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                       />
                     </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-600 mb-1">Postcode Prefix</label>
+                      <input
+                        type="text"
+                        value={scraperPostcode}
+                        onChange={e => setScraperPostcode(e.target.value)}
+                        className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                     <div>
                       <label className="block text-xs font-semibold text-slate-600 mb-1">Property Type</label>
                       <select
@@ -640,7 +765,59 @@
               </div>
             )}
 
-            {/* TAB 3: SCRIPTS & PITCHES */}
+            {/* TAB 3: MAP & POSTCODES INTEGRATION */}
+            {activeTab === 'map' && (
+              <div className="space-y-6">
+                <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                  <h2 className="text-lg font-bold text-slate-900 mb-1">Postcode & Area Map Visualizer</h2>
+                  <p className="text-sm text-slate-500 mb-6">
+                    Clustered breakdown of sourced properties grouped by UK postcode and geographic location.
+                  </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {availablePostcodes.filter(p => p !== 'All').map(pc => {
+                      const pcLeads = leads.filter(l => l.postcode === pc || l.location.includes(pc));
+                      const totalRent = pcLeads.reduce((acc, curr) => acc + (Number(curr.price) || 0), 0);
+                      return (
+                        <div key={pc} className="bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-sm">
+                          <div className="flex justify-between items-start mb-2">
+                            <span className="text-lg font-extrabold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg">
+                              {pc}
+                            </span>
+                            <span className="text-xs bg-slate-200 font-bold px-2 py-1 rounded-full text-slate-700">
+                              {pcLeads.length} Properties
+                            </span>
+                          </div>
+                          <p className="text-xs text-slate-500 mb-3">Total Monthly Rent: £{totalRent.toLocaleString()}</p>
+                          
+                          <div className="space-y-2 max-h-40 overflow-y-auto custom-scrollbar">
+                            {pcLeads.map(l => (
+                              <div key={l.id} className="bg-white p-2 rounded border border-slate-100 text-xs flex justify-between items-center">
+                                <div>
+                                  <p className="font-semibold text-slate-800">{l.title}</p>
+                                  <span className="text-[10px] text-slate-400">{l.bedrooms} Beds • £{l.price}/mo</span>
+                                </div>
+                                <button
+                                  onClick={() => {
+                                    setSelectedLead(l);
+                                    setActiveTab('crm');
+                                  }}
+                                  className="text-indigo-600 font-semibold hover:underline text-[11px]"
+                                >
+                                  View
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB 4: SCRIPTS & PITCHES */}
             {activeTab === 'scripts' && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Script Selector */}
@@ -720,11 +897,11 @@
               </div>
             )}
 
-            {/* TAB 4: ANALYTICS */}
+            {/* TAB 5: ANALYTICS */}
             {activeTab === 'analytics' && (
               <div className="space-y-6">
                 <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                  <h2 className="text-lg font-bold text-slate-900 mb-4">Lead Status Breakdown</h2>
+                  <h2 className="text-lg font-bold text-slate-900 mb-4">Lead Status Breakdown & Team Activity</h2>
                   <div className="space-y-3">
                     {[
                       { status: 'New Lead', color: 'bg-slate-500' },
@@ -760,7 +937,7 @@
                   <div className="flex justify-between items-start border-b border-slate-200 pb-4 mb-4">
                     <div>
                       <h2 className="font-bold text-lg text-slate-900">{selectedLead.title}</h2>
-                      <p className="text-xs text-slate-500">{selectedLead.location}</p>
+                      <p className="text-xs text-slate-500">{selectedLead.location} ({selectedLead.postcode})</p>
                     </div>
                     <button
                       onClick={() => setSelectedLead(null)}
@@ -784,116 +961,3 @@
                         <span className="text-slate-400 block">Contact:</span>
                         <span className="font-semibold">{selectedLead.contactName}</span>
                       </div>
-                      <div>
-                        <span className="text-slate-400 block">Phone:</span>
-                        <span className="font-semibold">{selectedLead.phone || 'N/A'}</span>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-slate-500 font-semibold mb-1">Pipeline Status</label>
-                      <select
-                        value={selectedLead.status}
-                        onChange={e => updateLeadStatus(selectedLead.id, e.target.value)}
-                        className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
-                      >
-                        <option value="New Lead">New Lead</option>
-                        <option value="Contacted">Contacted</option>
-                        <option value="In Negotiation">In Negotiation</option>
-                        <option value="Agreement Signed">Agreement Signed</option>
-                        <option value="Rejected">Rejected</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-slate-500 font-semibold mb-1">Interaction Log & Notes</label>
-                      <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 max-h-40 overflow-y-auto space-y-2 mb-2 custom-scrollbar">
-                        {(selectedLead.history || []).map((h, idx) => (
-                          <div key={idx} className="border-b border-slate-200 pb-1 last:border-0">
-                            <span className="text-[10px] text-slate-400 block">{h.date}</span>
-                            <p className="text-xs text-slate-800">{h.text}</p>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="flex space-x-2">
-                        <input
-                          type="text"
-                          placeholder="Log call outcome or note..."
-                          value={newNoteText}
-                          onChange={e => setNewNoteText(e.target.value)}
-                          className="flex-1 px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        />
-                        <button
-                          onClick={handleAddNote}
-                          className="px-3 py-1.5 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-500 transition text-xs"
-                        >
-                          Add
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-4 border-t border-slate-200 mt-6">
-                  <button
-                    onClick={() => setSelectedLead(null)}
-                    className="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-lg transition"
-                  >
-                    Close Panel
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Import CSV Modal */}
-          {showImportModal && (
-            <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-              <div className="bg-white rounded-xl shadow-xl max-w-lg w-full p-6 space-y-4">
-                <div className="flex justify-between items-center border-b border-slate-200 pb-3">
-                  <h3 className="font-bold text-base text-slate-900">Import CSV Leads</h3>
-                  <button onClick={() => setShowImportModal(false)} className="text-slate-400 hover:text-slate-600 font-bold">✕</button>
-                </div>
-
-                <p className="text-xs text-slate-500">
-                  Paste raw CSV text below. Format: <br />
-                  <code className="bg-slate-100 p-1 rounded block mt-1 text-[11px] text-slate-700">
-                    Title, Location, Price, Bedrooms, PropertyType, ContactName, Phone, Email, Status, Notes
-                  </code>
-                </p>
-
-                <textarea
-                  rows="6"
-                  placeholder="Paste CSV rows here..."
-                  value={csvRawText}
-                  onChange={e => setCsvRawText(e.target.value)}
-                  className="w-full p-3 text-xs font-mono border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-                />
-
-                <div className="flex justify-end space-x-2">
-                  <button
-                    onClick={() => setShowImportModal(false)}
-                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleCsvImport}
-                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-lg"
-                  >
-                    Import Data
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
-  </script>
-</body>
-</html>
