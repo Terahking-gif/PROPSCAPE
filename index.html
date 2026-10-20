@@ -1,0 +1,935 @@
+# Let's write a python script to update index.html with the exact requested modifications:
+# 1. Add the source / image / photo link preview for scraped/imported properties so the user can see what the property looks like.
+# 2. Remove postcodes and map references from the table/cards.
+# 3. Add Property Type selector (Flats, Houses, HMOs, Commercial, etc.) and Amount of Rooms (Bedrooms) selector directly into the Scraper Engine section.
+
+html_code = """<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PropScrape CRM - Rental Property Sourcing</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- React & ReactDOM -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  
+  <!-- Babel Standalone to compile JSX in browser -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    body {
+      background-color: #0f172a;
+      color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useMemo, useRef } = React;
+
+    function Icon({ name, className = "w-4 h-4" }) {
+      const iconRef = useRef(null);
+      useEffect(() => {
+        if (window.lucide && iconRef.current) {
+          iconRef.current.innerHTML = `<i data-lucide="${name}" class="${className}"></i>`;
+          window.lucide.createIcons({
+            root: iconRef.current
+          });
+        }
+      }, [name, className]);
+      return <span ref={iconRef} className="inline-flex items-center justify-center shrink-0" />;
+    }
+
+    const INITIAL_USERS = [
+      { id: 'usr-1', name: 'Alex Morgan', role: 'Lead Sourcer', email: 'alex@apexproperty.co.uk' },
+      { id: 'usr-2', name: 'David Chen', role: 'Deal Negotiator', email: 'david@apexproperty.co.uk' },
+      { id: 'usr-3', name: 'Sarah Connor', role: 'Acquisition Specialist', email: 'sarah@apexproperty.co.uk' }
+    ];
+
+    const INITIAL_PROPERTIES = [
+      {
+        id: 'prop-101',
+        title: 'Modern 2 Bed Apartment with River Views',
+        address: '14 Wharfside Quay',
+        location: 'Grays',
+        rent: 1450,
+        bedrooms: 2,
+        propertyType: 'Flats',
+        contactName: 'David Miller',
+        phone: '+44 7700 900123',
+        email: 'david.miller@propertygroup.co.uk',
+        contactType: 'Landlord',
+        dateScraped: '2026-03-12',
+        status: 'In Discussion',
+        sourceUrl: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=600&q=80',
+        notes: 'Landlord open to long-term corporate lease.',
+        assignedTo: 'Alex Morgan',
+        lastContactedBy: {
+          name: 'Alex Morgan',
+          timestamp: '2026-03-13 14:30',
+          actionType: 'Phone Call'
+        }
+      },
+      {
+        id: 'prop-102',
+        title: 'Spacious 4 Bed HMO / Shared House',
+        address: '88 High Street',
+        location: 'Manchester',
+        rent: 2200,
+        bedrooms: 4,
+        propertyType: 'HMOs',
+        contactName: 'Sarah Jenkins (Apex Lettings)',
+        phone: '+44 7700 900456',
+        email: 's.jenkins@apexlettings.com',
+        contactType: 'Agent',
+        dateScraped: '2026-03-14',
+        status: 'New Lead',
+        sourceUrl: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80',
+        notes: 'Fully furnished, ideal for professional shared living.',
+        assignedTo: 'David Chen',
+        lastContactedBy: {
+          name: 'David Chen',
+          timestamp: '2026-03-14 11:20',
+          actionType: 'Email'
+        }
+      },
+      {
+        id: 'prop-103',
+        title: '3 Bedroom Semi-Detached Family Home',
+        address: '42 Kensington Gardens',
+        location: 'London',
+        rent: 3100,
+        bedrooms: 3,
+        propertyType: 'Houses',
+        contactName: 'Marcus Vance',
+        phone: '+44 7700 900789',
+        email: 'marcus.vance@vancemail.co.uk',
+        contactType: 'Landlord',
+        dateScraped: '2026-03-10',
+        status: 'Attempted Contact',
+        sourceUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80',
+        notes: 'Left voicemail on 15th March.',
+        assignedTo: 'Sarah Connor',
+        lastContactedBy: {
+          name: 'Sarah Connor',
+          timestamp: '2026-03-15 16:45',
+          actionType: 'Voicemail'
+        }
+      },
+      {
+        id: 'prop-104',
+        title: '5 Bed Executive Detached House',
+        address: '12 Thames Promenade',
+        location: 'Grays',
+        rent: 2800,
+        bedrooms: 5,
+        propertyType: 'Houses',
+        contactName: 'Robert Sterling',
+        phone: '+44 7700 900654',
+        email: 'rsterling@sterlingestates.com',
+        contactType: 'Agent',
+        dateScraped: '2026-03-01',
+        status: 'Deal Secured',
+        sourceUrl: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=600&q=80',
+        notes: 'Contract signed! 3-year Guaranteed Rent agreed.',
+        assignedTo: 'Alex Morgan',
+        lastContactedBy: {
+          name: 'Alex Morgan',
+          timestamp: '2026-03-12 16:00',
+          actionType: 'Contract Signed'
+        }
+      }
+    ];
+
+    const PIPELINE_STAGES = [
+      'New Lead',
+      'Attempted Contact',
+      'In Discussion',
+      'Viewing Scheduled',
+      'Deal Secured',
+      'Cold/Archived'
+    ];
+
+    function App() {
+      const [properties, setProperties] = useState(() => {
+        const saved = localStorage.getItem('propscrape_crm_leads');
+        return saved ? JSON.parse(saved) : INITIAL_PROPERTIES;
+      });
+
+      const [users, setUsers] = useState(() => {
+        const saved = localStorage.getItem('propscrape_crm_users');
+        return saved ? JSON.parse(saved) : INITIAL_USERS;
+      });
+
+      const [currentUser, setCurrentUser] = useState(() => {
+        return localStorage.getItem('propscrape_current_user') || 'Alex Morgan';
+      });
+
+      const [activeTab, setActiveTab] = useState('crm');
+      const [searchQuery, setSearchQuery] = useState('');
+      const [selectedStage, setSelectedStage] = useState('ALL');
+      const [selectedLocation, setSelectedLocation] = useState('ALL');
+      
+      const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+      const [isUserModalOpen, setIsUserModalOpen] = useState(false);
+      const [selectedProp, setSelectedProp] = useState(null);
+
+      // Scraper Simulation State
+      const [scrapeTown, setScrapeTown] = useState('Grays');
+      const [scrapePropertyType, setScrapePropertyType] = useState('Flats');
+      const [scrapeBedrooms, setScrapeBedrooms] = useState('2');
+      const [isScraping, setIsScraping] = useState(false);
+      const [scraperLogs, setScraperLogs] = useState([]);
+      const [scrapedResults, setScrapedResults] = useState([]);
+
+      // New User Form State
+      const [newUserForm, setNewUserForm] = useState({ name: '', role: 'Lead Sourcer', email: '' });
+
+      const [newLead, setNewLead] = useState({
+        title: '', address: '', location: 'Grays',
+        rent: 1600, bedrooms: 2, propertyType: 'Flats',
+        contactName: '', phone: '', email: '', contactType: 'Landlord',
+        sourceUrl: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80'
+      });
+
+      useEffect(() => {
+        localStorage.setItem('propscrape_crm_leads', JSON.stringify(properties));
+      }, [properties]);
+
+      useEffect(() => {
+        localStorage.setItem('propscrape_crm_users', JSON.stringify(users));
+      }, [users]);
+
+      const filtered = useMemo(() => {
+        return properties.filter(p => {
+          const q = searchQuery.toLowerCase();
+          const matchSearch = (p.title || '').toLowerCase().includes(q) ||
+            (p.address || '').toLowerCase().includes(q) ||
+            (p.location || '').toLowerCase().includes(q) ||
+            (p.contactName || '').toLowerCase().includes(q);
+          const matchStage = selectedStage === 'ALL' || p.status === selectedStage;
+          const matchLoc = selectedLocation === 'ALL' || p.location === selectedLocation;
+          return matchSearch && matchStage && matchLoc;
+        });
+      }, [properties, searchQuery, selectedStage, selectedLocation]);
+
+      const locations = useMemo(() => {
+        return Array.from(new Set(properties.map(p => p.location).filter(Boolean)));
+      }, [properties]);
+
+      const handleUpdateStatus = (id, newStatus) => {
+        const time = new Date().toISOString().slice(0, 16).replace('T', ' ');
+        setProperties(prev => prev.map(p => {
+          if (p.id === id) {
+            return {
+              ...p,
+              status: newStatus,
+              lastContactedBy: {
+                name: currentUser,
+                timestamp: time,
+                actionType: 'Status Change'
+              }
+            };
+          }
+          return p;
+        }));
+      };
+
+      const handleAddLeadSubmit = (e) => {
+        e.preventDefault();
+        const id = 'prop-' + Date.now().toString().slice(-4);
+        const time = new Date().toISOString().slice(0, 16).replace('T', ' ');
+        const item = {
+          ...newLead,
+          id,
+          dateScraped: time.split(' ')[0],
+          status: 'New Lead',
+          source: 'Manual Input',
+          assignedTo: currentUser,
+          lastContactedBy: {
+            name: currentUser,
+            timestamp: time,
+            actionType: 'Created'
+          }
+        };
+        setProperties([item, ...properties]);
+        setIsAddModalOpen(false);
+      };
+
+      const handleAddUserSubmit = (e) => {
+        e.preventDefault();
+        if (!newUserForm.name) return;
+        const newUser = {
+          id: 'usr-' + Date.now().toString().slice(-4),
+          ...newUserForm
+        };
+        setUsers([...users, newUser]);
+        setCurrentUser(newUser.name);
+        setNewUserForm({ name: '', role: 'Lead Sourcer', email: '' });
+        setIsUserModalOpen(false);
+      };
+
+      const runScraperSimulation = () => {
+        setIsScraping(true);
+        setScraperLogs(['Initializing portal scraper engine...', `Target town: ${scrapeTown} | Type: ${scrapePropertyType} | Rooms: ${scrapeBedrooms}...`, 'Extracting listing images, rents & landlord details...']);
+        setScrapedResults([]);
+
+        setTimeout(() => {
+          setScraperLogs(prev => [...prev, 'Parsing property photos and contact numbers...', 'Success! 2 fresh matching leads found.']);
+          const imagePool = [
+            'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80',
+            'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80',
+            'https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=600&q=80'
+          ];
+          const generated = [
+            {
+              id: 'scrape-' + Date.now() + '-1',
+              title: `${scrapeBedrooms} Bed ${scrapePropertyType} in ${scrapeTown} Center`,
+              address: '12 Market Street',
+              location: scrapeTown,
+              rent: 1250 + (Number(scrapeBedrooms) * 350),
+              bedrooms: Number(scrapeBedrooms),
+              propertyType: scrapePropertyType,
+              contactName: 'James Sterling',
+              phone: '+44 7700 909111',
+              email: 'james@sterlinglettings.co.uk',
+              contactType: 'Landlord',
+              dateScraped: new Date().toISOString().split('T')[0],
+              status: 'New Lead',
+              source: 'Web Scraper',
+              sourceUrl: imagePool[0],
+              notes: 'Scraped from live portal feed. High yield potential.',
+              assignedTo: currentUser,
+              lastContactedBy: { name: currentUser, timestamp: new Date().toISOString().slice(0, 16).replace('T', ' '), actionType: 'Scraped' }
+            },
+            {
+              id: 'scrape-' + Date.now() + '-2',
+              title: `Luxury ${scrapeBedrooms} Bed ${scrapePropertyType}`,
+              address: '78 Riverside Crescent',
+              location: scrapeTown,
+              rent: 1550 + (Number(scrapeBedrooms) * 300),
+              bedrooms: Number(scrapeBedrooms),
+              propertyType: scrapePropertyType,
+              contactName: 'Elena Rostova',
+              phone: '+44 7700 909222',
+              email: 'elena@rostovaproperty.com',
+              contactType: 'Agent',
+              dateScraped: new Date().toISOString().split('T')[0],
+              status: 'New Lead',
+              source: 'Web Scraper',
+              sourceUrl: imagePool[1],
+              notes: 'Vendor motivated for corporate let agreement.',
+              assignedTo: currentUser,
+              lastContactedBy: { name: currentUser, timestamp: new Date().toISOString().slice(0, 16).replace('T', ' '), actionType: 'Scraped' }
+            }
+          ];
+          setScrapedResults(generated);
+          setIsScraping(false);
+        }, 1500);
+      };
+
+      const importScrapedLead = (lead) => {
+        setProperties([lead, ...properties]);
+        setScrapedResults(prev => prev.filter(p => p.id !== lead.id));
+      };
+
+      const exportCSV = () => {
+        const headers = ['ID', 'Title', 'Address', 'Town', 'Rent', 'Bedrooms', 'Property Type', 'Contact', 'Phone', 'Status', 'Last Contacted By'];
+        const rows = filtered.map(p => [
+          `"${p.id}"`,
+          `"${p.title.replace(/"/g, '""')}"`,
+          `"${p.address.replace(/"/g, '""')}"`,
+          `"${p.location}"`,
+          p.rent,
+          p.bedrooms,
+          `"${p.propertyType}"`,
+          `"${p.contactName.replace(/"/g, '""')}"`,
+          `"${p.phone}"`,
+          `"${p.status}"`,
+          `"${p.lastContactedBy?.name || ''}"`
+        ]);
+        const csvContent = [headers.join(','), ...rows.map(e => e.join(','))].join('\\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `propscrape_leads_${filtered.length}.csv`;
+        a.click();
+      };
+
+      return (
+        <div className="min-h-screen flex flex-col">
+          {/* Header */}
+          <header className="border-b border-slate-800 bg-slate-950/80 sticky top-0 z-20 backdrop-blur-md">
+            <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="bg-indigo-600 p-2 rounded-xl text-white">
+                  <Icon name="building-2" className="w-5 h-5" />
+                </div>
+                <div>
+                  <h1 className="text-base font-bold bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
+                    PropScrape CRM
+                  </h1>
+                  <p className="text-[10px] text-slate-400">Rental Sourcing & Lead Management</p>
+                </div>
+              </div>
+
+              {/* Navigation Tabs */}
+              <div className="hidden md:flex items-center gap-1 bg-slate-900 border border-slate-800 p-1 rounded-xl">
+                <button
+                  onClick={() => setActiveTab('crm')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${activeTab === 'crm' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'}`}
+                >
+                  CRM Pipeline
+                </button>
+                <button
+                  onClick={() => setActiveTab('scraper')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 ${activeTab === 'scraper' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'}`}
+                >
+                  <Icon name="sparkles" className="w-3.5 h-3.5" />
+                  <span>Scraper Engine</span>
+                </button>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-xl text-xs">
+                  <span className="text-slate-400">User:</span>
+                  <select 
+                    value={currentUser} 
+                    onChange={(e) => {
+                      if (e.target.value === 'ADD_NEW') {
+                        setIsUserModalOpen(true);
+                      } else {
+                        setCurrentUser(e.target.value);
+                        localStorage.setItem('propscrape_current_user', e.target.value);
+                      }
+                    }}
+                    className="bg-transparent font-semibold text-slate-200 focus:outline-none"
+                  >
+                    {users.map(u => (
+                      <option key={u.id} value={u.name} className="bg-slate-900">{u.name} ({u.role})</option>
+                    ))}
+                    <option value="ADD_NEW" className="bg-slate-900 text-indigo-400 font-bold">+ Add New User...</option>
+                  </select>
+                </div>
+
+                <button
+                  onClick={() => setIsAddModalOpen(true)}
+                  className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold shadow-md transition"
+                >
+                  <Icon name="plus" className="w-4 h-4" />
+                  <span>Add Lead</span>
+                </button>
+              </div>
+            </div>
+          </header>
+
+          {/* Mobile Tab bar */}
+          <div className="md:hidden flex border-b border-slate-800 bg-slate-950 px-4 py-2 gap-2">
+            <button
+              onClick={() => setActiveTab('crm')}
+              className={`flex-1 py-1.5 text-xs font-semibold rounded-lg ${activeTab === 'crm' ? 'bg-indigo-600 text-white' : 'bg-slate-900 text-slate-400'}`}
+            >
+              CRM Pipeline
+            </button>
+            <button
+              onClick={() => setActiveTab('scraper')}
+              className={`flex-1 py-1.5 text-xs font-semibold rounded-lg ${activeTab === 'scraper' ? 'bg-indigo-600 text-white' : 'bg-slate-900 text-slate-400'}`}
+            >
+              Scraper Engine
+            </button>
+          </div>
+
+          {/* Main Container */}
+          <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
+            
+            {activeTab === 'crm' ? (
+              <>
+                {/* Top Stat Cards */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="bg-slate-800/60 border border-slate-700 p-4 rounded-xl">
+                    <div className="text-xs text-slate-400">Total Leads</div>
+                    <div className="text-2xl font-bold mt-1">{properties.length}</div>
+                  </div>
+                  <div className="bg-slate-800/60 border border-slate-700 p-4 rounded-xl">
+                    <div className="text-xs text-slate-400">Contacted</div>
+                    <div className="text-2xl font-bold text-cyan-400 mt-1">
+                      {properties.filter(p => p.status !== 'New Lead').length}
+                    </div>
+                  </div>
+                  <div className="bg-slate-800/60 border border-slate-700 p-4 rounded-xl">
+                    <div className="text-xs text-slate-400">Total Rent Ask</div>
+                    <div className="text-2xl font-bold text-amber-400 mt-1">
+                      £{properties.reduce((s, p) => s + Number(p.rent || 0), 0).toLocaleString()}
+                    </div>
+                  </div>
+                  <div className="bg-slate-800/60 border border-slate-700 p-4 rounded-xl">
+                    <div className="text-xs text-slate-400">Deals Secured</div>
+                    <div className="text-2xl font-bold text-emerald-400 mt-1">
+                      {properties.filter(p => p.status === 'Deal Secured').length}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Filter and Search Bar */}
+                <div className="bg-slate-800/80 border border-slate-700 p-4 rounded-2xl flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+                  <div className="relative flex-1">
+                    <input
+                      type="text"
+                      placeholder="Search address, town or landlord..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                    />
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2">
+                    <select
+                      value={selectedLocation}
+                      onChange={(e) => setSelectedLocation(e.target.value)}
+                      className="bg-slate-900 border border-slate-700 text-slate-300 text-xs rounded-xl px-3 py-2"
+                    >
+                      <option value="ALL">All Towns</option>
+                      {locations.map(loc => (
+                        <option key={loc} value={loc}>{loc}</option>
+                      ))}
+                    </select>
+
+                    <select
+                      value={selectedStage}
+                      onChange={(e) => setSelectedStage(e.target.value)}
+                      className="bg-slate-900 border border-slate-700 text-slate-300 text-xs rounded-xl px-3 py-2"
+                    >
+                      <option value="ALL">All Stages</option>
+                      {PIPELINE_STAGES.map(s => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
+
+                    <button
+                      onClick={exportCSV}
+                      className="flex items-center gap-1.5 px-3 py-2 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded-xl text-xs font-semibold"
+                    >
+                      <Icon name="download" className="w-3.5 h-3.5" />
+                      <span>Export ({filtered.length})</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Leads Table */}
+                <div className="bg-slate-800/60 border border-slate-700 rounded-2xl overflow-hidden shadow-xl">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-sm text-slate-300">
+                      <thead className="bg-slate-900/90 text-xs text-slate-400 uppercase tracking-wider border-b border-slate-700">
+                        <tr>
+                          <th className="p-4">Property Photo</th>
+                          <th className="p-4">Property Title & Address</th>
+                          <th className="p-4">Rent / Beds / Type</th>
+                          <th className="p-4">Landlord / Phone</th>
+                          <th className="p-4">Status</th>
+                          <th className="p-4 text-right">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-700/60">
+                        {filtered.length === 0 ? (
+                          <tr>
+                            <td colSpan={6} className="p-8 text-center text-slate-500">
+                              No property leads match your criteria.
+                            </td>
+                          </tr>
+                        ) : (
+                          filtered.map(p => (
+                            <tr key={p.id} className="hover:bg-slate-700/30 transition">
+                              <td className="p-4 whitespace-nowrap">
+                                <img 
+                                  src={p.sourceUrl || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=200&q=80'} 
+                                  alt="Property" 
+                                  className="w-16 h-12 object-cover rounded-lg border border-slate-700 shadow-sm"
+                                />
+                              </td>
+                              <td className="p-4">
+                                <div className="font-semibold text-slate-100">{p.title}</div>
+                                <div className="text-xs text-slate-400 mt-0.5">{p.address}, {p.location}</div>
+                              </td>
+                              <td className="p-4 whitespace-nowrap">
+                                <div className="text-slate-100 font-medium">£{p.rent} / mo</div>
+                                <div className="text-xs text-slate-400">{p.bedrooms} Bed ({p.propertyType})</div>
+                              </td>
+                              <td className="p-4 whitespace-nowrap">
+                                <div className="font-medium text-slate-200">{p.contactName}</div>
+                                <div className="text-xs text-slate-400">{p.phone}</div>
+                              </td>
+                              <td className="p-4 whitespace-nowrap">
+                                <select
+                                  value={p.status}
+                                  onChange={(e) => handleUpdateStatus(p.id, e.target.value)}
+                                  className="text-xs font-semibold px-2.5 py-1 rounded-full border border-slate-700 bg-slate-900 cursor-pointer focus:outline-none"
+                                >
+                                  {PIPELINE_STAGES.map(s => (
+                                    <option key={s} value={s}>{s}</option>
+                                  ))}
+                                </select>
+                              </td>
+                              <td className="p-4 whitespace-nowrap text-right">
+                                <button
+                                  onClick={() => setSelectedProp(p)}
+                                  className="px-3 py-1 bg-indigo-600/20 hover:bg-indigo-600/40 text-indigo-300 border border-indigo-500/30 rounded-lg text-xs"
+                                >
+                                  Details
+                                </button>
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </>
+            ) : (
+              /* Scraper Engine Tab */
+              <div className="space-y-6">
+                <div className="bg-slate-800/80 border border-slate-700 rounded-2xl p-6 space-y-4">
+                  <div className="flex items-center gap-3 pb-3 border-b border-slate-700">
+                    <div className="bg-indigo-600/20 p-2.5 rounded-xl text-indigo-400 border border-indigo-500/30">
+                      <Icon name="sparkles" className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h2 className="text-base font-bold text-slate-100">Automated Property Type & Room Scraper Engine</h2>
+                      <p className="text-xs text-slate-400">Select target property type and room count to pull live listings with preview photos.</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                    <div>
+                      <label className="block text-slate-400 mb-1 font-semibold">Town / City</label>
+                      <input
+                        type="text"
+                        value={scrapeTown}
+                        onChange={(e) => setScrapeTown(e.target.value)}
+                        className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-100"
+                        placeholder="e.g. Grays"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-slate-400 mb-1 font-semibold">Property Type</label>
+                      <select
+                        value={scrapePropertyType}
+                        onChange={(e) => setScrapePropertyType(e.target.value)}
+                        className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-100"
+                      >
+                        <option value="Flats">Flats / Apartments</option>
+                        <option value="Houses">Houses</option>
+                        <option value="HMOs">HMOs / Shared Living</option>
+                        <option value="Commercial">Commercial / Mixed</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-slate-400 mb-1 font-semibold">Amount of Rooms (Bedrooms)</label>
+                      <select
+                        value={scrapeBedrooms}
+                        onChange={(e) => setScrapeBedrooms(e.target.value)}
+                        className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-100"
+                      >
+                        <option value="1">1 Bedroom</option>
+                        <option value="2">2 Bedrooms</option>
+                        <option value="3">3 Bedrooms</option>
+                        <option value="4">4 Bedrooms</option>
+                        <option value="5">5+ Bedrooms</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end pt-2">
+                    <button
+                      disabled={isScraping}
+                      onClick={runScraperSimulation}
+                      className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-lg transition"
+                    >
+                      {isScraping ? <Icon name="refresh-cw" className="w-4 h-4 animate-spin" /> : <Icon name="sparkles" className="w-4 h-4" />}
+                      <span>{isScraping ? 'Scraping Portals...' : 'Run Scraper Engine'}</span>
+                    </button>
+                  </div>
+
+                  {scraperLogs.length > 0 && (
+                    <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-[11px] text-cyan-400 space-y-1">
+                      <div className="text-slate-500 uppercase tracking-widest text-[9px] mb-2">Scraper Terminal Output:</div>
+                      {scraperLogs.map((log, i) => (
+                        <div key={i}>&gt; {log}</div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {scrapedResults.length > 0 && (
+                  <div className="space-y-4">
+                    <h3 className="font-bold text-sm text-slate-200">Discovered Property Leads (With Visual Previews):</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {scrapedResults.map(lead => (
+                        <div key={lead.id} className="bg-slate-800/80 border border-slate-700 rounded-2xl overflow-hidden shadow-xl space-y-3">
+                          <img src={lead.sourceUrl} alt="Scraped Property" className="w-full h-40 object-cover" />
+                          <div className="p-4 space-y-3">
+                            <div>
+                              <div className="font-bold text-slate-100 text-sm">{lead.title}</div>
+                              <div className="text-xs text-slate-400 mt-0.5">{lead.address}, {lead.location}</div>
+                            </div>
+                            <div className="flex justify-between items-center bg-slate-900 p-2.5 rounded-xl text-xs">
+                              <div><span className="text-slate-400">Rent:</span> <span className="font-bold text-indigo-300">£{lead.rent} pcm</span></div>
+                              <div><span className="text-slate-400">Type:</span> {lead.propertyType} ({lead.bedrooms} Bed)</div>
+                            </div>
+                            <div className="flex justify-end pt-1">
+                              <button
+                                onClick={() => importScrapedLead(lead)}
+                                className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold shadow"
+                              >
+                                <Icon name="plus" className="w-3.5 h-3.5" />
+                               <span>Import into CRM Pipeline</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </main>
+
+          {/* Add User Modal */}
+          {isUserModalOpen && (
+            <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <div className="bg-slate-800 border border-slate-700 rounded-2xl max-w-sm w-full p-6 space-y-4">
+                <div className="flex justify-between items-center pb-2 border-b border-slate-700">
+                  <h3 className="font-bold text-slate-100">Add New Team User</h3>
+                  <button onClick={() => setIsUserModalOpen(false)} className="text-slate-400 hover:text-slate-200">✕</button>
+                </div>
+                <form onSubmit={handleAddUserSubmit} className="space-y-3 text-xs">
+                  <div>
+                    <label className="block text-slate-400 mb-1 font-semibold">Full Name</label>
+                    <input
+                      required
+                      type="text"
+                      placeholder="e.g. Marcus Vance"
+                      value={newUserForm.name}
+                      onChange={e => setNewUserForm({ ...newUserForm, name: e.target.value })}
+                      className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-100"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-400 mb-1 font-semibold">Role / Title</label>
+                    <select
+                      value={newUserForm.role}
+                      onChange={e => setNewUserForm({ ...newUserForm, role: e.target.value })}
+                      className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-100"
+                    >
+                      <option value="Lead Sourcer">Lead Sourcer</option>
+                      <option value="Deal Negotiator">Deal Negotiator</option>
+                      <option value="Acquisition Specialist">Acquisition Specialist</option>
+                      <option value="Team Manager">Team Manager</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-slate-400 mb-1 font-semibold">Email Address</label>
+                    <input
+                      required
+                      type="email"
+                      placeholder="marcus@apexproperty.co.uk"
+                      value={newUserForm.email}
+                      onChange={e => setNewUserForm({ ...newUserForm, email: e.target.value })}
+                      className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-100"
+                    />
+                  </div>
+                  <div className="pt-3 flex justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setIsUserModalOpen(false)}
+                      className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-xl text-slate-200"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-white font-semibold"
+                    >
+                      Add & Select User
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {/* Add Lead Modal */}
+          {isAddModalOpen && (
+            <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <div className="bg-slate-800 border border-slate-700 rounded-2xl max-w-lg w-full p-6 space-y-4">
+                <div className="flex justify-between items-center pb-2 border-b border-slate-700">
+                  <h3 className="font-bold text-slate-100">Add New Rental Lead</h3>
+                  <button onClick={() => setIsAddModalOpen(false)} className="text-slate-400 hover:text-slate-200">✕</button>
+                </div>
+                <form onSubmit={handleAddLeadSubmit} className="space-y-3 text-xs">
+                  <div>
+                    <label className="block text-slate-400 mb-1">Property Title</label>
+                    <input
+                      required
+                      type="text"
+                      placeholder="e.g. 2 Bed Modern Flat near Station"
+                      value={newLead.title}
+                      onChange={e => setNewLead({ ...newLead, title: e.target.value })}
+                      className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-100"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-slate-400 mb-1">Town / Area</label>
+                      <input
+                        required
+                        type="text"
+                        value={newLead.location}
+                        onChange={e => setNewLead({ ...newLead, location: e.target.value })}
+                        className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-100"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-slate-400 mb-1">Property Type</label>
+                      <select
+                        value={newLead.propertyType}
+                        onChange={e => setNewLead({ ...newLead, propertyType: e.target.value })}
+                        className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-100"
+                      >
+                        <option value="Flats">Flats</option>
+                        <option value="Houses">Houses</option>
+                        <option value="HMOs">HMOs</option>
+                        <option value="Commercial">Commercial</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-slate-400 mb-1">Street Address</label>
+                    <input
+                      required
+                      type="text"
+                      placeholder="e.g. 15 High Street"
+                      value={newLead.address}
+                      onChange={e => setNewLead({ ...newLead, address: e.target.value })}
+                      className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-100"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-slate-400 mb-1">Rent (£ PCM)</label>
+                      <input
+                        required
+                        type="number"
+                        value={newLead.rent}
+                        onChange={e => setNewLead({ ...newLead, rent: Number(e.target.value) })}
+                        className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-100"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-slate-400 mb-1">Bedrooms (Rooms)</label>
+                      <input
+                        required
+                        type="number"
+                        value={newLead.bedrooms}
+                        onChange={e => setNewLead({ ...newLead, bedrooms: Number(e.target.value) })}
+                        className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-100"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-slate-400 mb-1">Landlord / Contact Name</label>
+                      <input
+                        required
+                        type="text"
+                        value={newLead.contactName}
+                        onChange={e => setNewLead({ ...newLead, contactName: e.target.value })}
+                        className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-100"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-slate-400 mb-1">Phone Number</label>
+                      <input
+                        required
+                        type="text"
+                        value={newLead.phone}
+                        onChange={e => setNewLead({ ...newLead, phone: e.target.value })}
+                        className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-slate-100"
+                      />
+                    </div>
+                  </div>
+                  <div className="pt-3 flex justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setIsAddModalOpen(false)}
+                      className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-xl text-slate-200"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-white font-semibold"
+                    >
+                      Save Lead
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {/* Lead Detail Modal */}
+          {selectedProp && (
+            <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <div className="bg-slate-800 border border-slate-700 rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl space-y-4">
+                <img src={selectedProp.sourceUrl} alt="Property Preview" className="w-full h-48 object-cover" />
+                <div className="p-6 space-y-4">
+                  <div className="flex justify-between items-start pb-2 border-b border-slate-700">
+                    <div>
+                      <h3 className="font-bold text-slate-100 text-base">{selectedProp.title}</h3>
+                      <p className="text-xs text-slate-400">{selectedProp.address}, {selectedProp.location}</p>
+                    </div>
+                    <button onClick={() => setSelectedProp(null)} className="text-slate-400 hover:text-slate-200">✕</button>
+                  </div>
+                  <div className="bg-slate-900 p-3 rounded-xl text-xs space-y-1">
+                    <div><span className="text-slate-400">Rent:</span> <span className="font-bold text-indigo-300">£{selectedProp.rent} / month</span></div>
+                    <div><span className="text-slate-400">Property Type:</span> {selectedProp.propertyType} ({selectedProp.bedrooms} Bedrooms)</div>
+                    <div><span className="text-slate-400">Contact:</span> {selectedProp.contactName} ({selectedProp.phone})</div>
+                    <div><span className="text-slate-400">Assigned To:</span> {selectedProp.assignedTo || 'Unassigned'}</div>
+                  </div>
+                  <div className="flex justify-end pt-2">
+                    <button onClick={() => setSelectedProp(null)} className="px-4 py-2 bg-slate-700 rounded-xl text-xs text-slate-200">
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
+"""
+
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(html_code)
+
+print("index.html successfully updated with property photos/sources, removed postcodes/maps, and added property type/room filters in scraper!")
